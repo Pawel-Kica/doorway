@@ -62,3 +62,5 @@ Screenshots land in `/tmp/momentum-clone-shots/`.
 ## License
 
 MIT for the code, see [LICENSE](LICENSE). Nature photos keep their Wikimedia Commons licenses, listed in `extension/photos/stock.json`.
+
+The photos I use myself are in `my-photos/`, grab any you like. They aren't covered by the MIT license and belong to their photographers (the Bugatti Tourbillon shots are Bugatti press photos, the Starship launch is SpaceX's).
