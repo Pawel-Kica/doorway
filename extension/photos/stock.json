@@ -1,0 +1,1002 @@
+[
+ {
+  "id": "001",
+  "file": "photos/stock/001.jpg",
+  "thumb": "photos/stock/thumbs/001.jpg",
+  "location": "Watzmann, Bavaria, Germany",
+  "photographer": "Jörg Braukmann",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Milseburg",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Watzmann_(Stangga%C3%9F).jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "002",
+  "file": "photos/stock/002.jpg",
+  "thumb": "photos/stock/thumbs/002.jpg",
+  "location": "Dead Vlei, Namib-Naukluft Park, Namibia",
+  "photographer": "Daniel Kraft",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Domob",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dead_Vlei_Tree_central.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "003",
+  "file": "photos/stock/003.jpg",
+  "thumb": "photos/stock/thumbs/003.jpg",
+  "location": "Lake Tekapo, Canterbury, New Zealand",
+  "photographer": "Krzysztof Golik",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Tournasol7",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lake_Tekapo_01.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "004",
+  "file": "photos/stock/004.jpg",
+  "thumb": "photos/stock/thumbs/004.jpg",
+  "location": "Flakstad, Lofoten, Norway",
+  "photographer": "followhansi",
+  "photographerUrl": "https://unsplash.com/@followhansi",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lofoten,_Norway_(Unsplash).jpg",
+  "license": "CC0"
+ },
+ {
+  "id": "005",
+  "file": "photos/stock/005.jpg",
+  "thumb": "photos/stock/thumbs/005.jpg",
+  "location": "Twelve Apostles, Victoria, Australia",
+  "photographer": "Dietmar Rabich",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q34788025",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Princetown_(AU),_Port_Campbell_National_Park,_Twelve_Apostles_--_2019_--_0930.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "006",
+  "file": "photos/stock/006.jpg",
+  "thumb": "photos/stock/thumbs/006.jpg",
+  "location": "Skógafoss, Southern Region, Iceland",
+  "photographer": "Martin Falbisoner",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Martin_Falbisoner",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sk%C3%B3gafoss_July_2014.JPG",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "007",
+  "file": "photos/stock/007.jpg",
+  "thumb": "photos/stock/thumbs/007.jpg",
+  "location": "Zhangjiajie, Hunan, China",
+  "photographer": "chensiyuan",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Alchemist-hp",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:1_zhangjiajie_huangshizhai_wulingyuan_panorama_2012.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "008",
+  "file": "photos/stock/008.jpg",
+  "thumb": "photos/stock/thumbs/008.jpg",
+  "location": "Seceda, Val Gardena, Italy",
+  "photographer": "Wolfgang Moroder",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Moroder",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Odles_da_Seceda_da_duman_tl_nibl_Gherd%C3%ABina.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "009",
+  "file": "photos/stock/009.jpg",
+  "thumb": "photos/stock/thumbs/009.jpg",
+  "location": "Lower Antelope Canyon, Arizona, USA",
+  "photographer": "Meckimac",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Meckimac",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lower_Antelope_Canyon_478.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "010",
+  "file": "photos/stock/010.jpg",
+  "thumb": "photos/stock/thumbs/010.jpg",
+  "location": "Sifjorden, Senja, Norway",
+  "photographer": "Ximonic (Simo Räsänen)",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Ximonic",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:View_to_Sifjorden_from_Sifjord,_Senja,_Troms,_Norway_in_2014_August.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "011",
+  "file": "photos/stock/011.jpg",
+  "thumb": "photos/stock/thumbs/011.jpg",
+  "location": "Lake Bled, Upper Carniola, Slovenia",
+  "photographer": "Krzysztof Golik",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Tournasol7",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bled_Island_05.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "012",
+  "file": "photos/stock/012.jpg",
+  "thumb": "photos/stock/thumbs/012.jpg",
+  "location": "Valle de la Luna, Atacama, Chile",
+  "photographer": "Diego Delso",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q28147777",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duna_Mayor,_Valle_de_la_Luna,_San_Pedro_de_Atacama,_Chile,_2016-02-01,_DD_173-175_HDR.JPG",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "013",
+  "file": "photos/stock/013.jpg",
+  "thumb": "photos/stock/thumbs/013.jpg",
+  "location": "Roruper Holz, North Rhine-Westphalia, Germany",
+  "photographer": "Dietmar Rabich",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q34788025",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Rorup,_NSG_Roruper_Holz_--_2021_--_8187-91.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "014",
+  "file": "photos/stock/014.jpg",
+  "thumb": "photos/stock/thumbs/014.jpg",
+  "location": "Morača River, Podgorica, Montenegro",
+  "photographer": "Diego Delso",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q28147777",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:R%C3%ADo_Moraca,_norte_de_Podgorica,_Montenegro,_2014-04-14,_DD_09.JPG",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "015",
+  "file": "photos/stock/015.jpg",
+  "thumb": "photos/stock/thumbs/015.jpg",
+  "location": "Navagio Beach, Zakynthos, Greece",
+  "photographer": "Wilnel José Verdú Guerrero",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Wilnel_Jos%C3%A9_Verd%C3%BA_Guerrero",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Navagio,_Zante_02.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "016",
+  "file": "photos/stock/016.jpg",
+  "thumb": "photos/stock/thumbs/016.jpg",
+  "location": "Gokyo Lakes, Solukhumbu, Nepal",
+  "photographer": "Megaurab09",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Megaurab09",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aerial_View_of_Peaks_of_Khumbu,_Ngozumpa_Glacier_and_Gokyo_Lakes_(crop).jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "017",
+  "file": "photos/stock/017.jpg",
+  "thumb": "photos/stock/thumbs/017.jpg",
+  "location": "Kuang Si Falls, Luang Prabang, Laos",
+  "photographer": "Basile Morin",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Basile_Morin",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kuang_Si_Falls_and_its_emerald_water_pools_in_Luang_Prabang_province_Laos.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "018",
+  "file": "photos/stock/018.jpg",
+  "thumb": "photos/stock/thumbs/018.jpg",
+  "location": "Serranía de Hornocal, Jujuy, Argentina",
+  "photographer": "Havardtl",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Havardtl",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Serran%C3%ADa_de_Hornocal_up_close_near_Humahuaca.jpg",
+  "license": "CC BY 4.0"
+ },
+ {
+  "id": "019",
+  "file": "photos/stock/019.jpg",
+  "thumb": "photos/stock/thumbs/019.jpg",
+  "location": "Lac de Gentau, Pyrénées-Atlantiques, France",
+  "photographer": "Myrabella",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Myrabella",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gentau_Pic_du_Midi_Ossau.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "020",
+  "file": "photos/stock/020.jpg",
+  "thumb": "photos/stock/thumbs/020.jpg",
+  "location": "Ogoy Island, Lake Baikal, Russia",
+  "photographer": "Sergey Pesterev",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Black_Sickle",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ogoy_island_in_winter.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "021",
+  "file": "photos/stock/021.jpg",
+  "thumb": "photos/stock/thumbs/021.jpg",
+  "location": "Padar Island, East Nusa Tenggara, Indonesia",
+  "photographer": "Jakub Hałun",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Jakubhal",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Padar_Island,_Komodo_National_Park,_Indonesia,_20250822_0929_2659.jpg",
+  "license": "CC BY 4.0"
+ },
+ {
+  "id": "022",
+  "file": "photos/stock/022.jpg",
+  "thumb": "photos/stock/thumbs/022.jpg",
+  "location": "The Quiraing, Isle of Skye, Scotland",
+  "photographer": "Colin",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Colin",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:South_over_the_Quiraing,_Isle_of_Skye_-_2.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "023",
+  "file": "photos/stock/023.jpg",
+  "thumb": "photos/stock/thumbs/023.jpg",
+  "location": "Mount Shasta, California, USA",
+  "photographer": "Frank Schulenburg",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q57175365",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mount_Shasta_as_seen_from_Heart_Lake_in_September_2020.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "024",
+  "file": "photos/stock/024.jpg",
+  "thumb": "photos/stock/thumbs/024.jpg",
+  "location": "Lençóis Maranhenses, Maranhão, Brazil",
+  "photographer": "Jardelsliumba",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Jardelsliumba",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Len%C3%A7%C3%B3is_de_Areia.JPG",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "025",
+  "file": "photos/stock/025.jpg",
+  "thumb": "photos/stock/thumbs/025.jpg",
+  "location": "Lünersee, Vorarlberg, Austria",
+  "photographer": "Herbert Heim",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Heimfoto",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Vandans_L%C3%BCnersee_Vogelperspektive_W.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "026",
+  "file": "photos/stock/026.jpg",
+  "thumb": "photos/stock/thumbs/026.jpg",
+  "location": "Fairbanks North Star Borough, Alaska, USA",
+  "photographer": "United States Air Force",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/United_States_Air_Force",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aurora_borealis_over_Eielson_Air_Force_Base,_Alaska.jpg",
+  "license": "Public domain"
+ },
+ {
+  "id": "027",
+  "file": "photos/stock/027.jpg",
+  "thumb": "photos/stock/thumbs/027.jpg",
+  "location": "Calanques de Piana, Corsica, France",
+  "photographer": "Myrabella",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Myrabella",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:01_Calanche_Piana.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "028",
+  "file": "photos/stock/028.jpg",
+  "thumb": "photos/stock/thumbs/028.jpg",
+  "location": "Valle Carbajal, Tierra del Fuego, Argentina",
+  "photographer": "Godot13",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Godot13",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:ARG-2016-Aerial-Tierra_del_Fuego_(Ushuaia)%E2%80%93Valle_Carbajal_01.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "029",
+  "file": "photos/stock/029.jpg",
+  "thumb": "photos/stock/thumbs/029.jpg",
+  "location": "Goðafoss, Northeastern Region, Iceland",
+  "photographer": "Martin Falbisoner",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Martin_Falbisoner",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Go%C3%B0afoss_July_2014.JPG",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "030",
+  "file": "photos/stock/030.jpg",
+  "thumb": "photos/stock/thumbs/030.jpg",
+  "location": "Seiser Alm, South Tyrol, Italy",
+  "photographer": "Wolfgang Moroder",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Moroder",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mont_de_Seuc_y_l_Saslong_da_Cod_dal_Fil.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "031",
+  "file": "photos/stock/031.jpg",
+  "thumb": "photos/stock/thumbs/031.jpg",
+  "location": "Grand Prismatic Spring, Wyoming, USA",
+  "photographer": "Dietmar Rabich",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q34788025",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yellowstone_National_Park_(WY,_USA),_Grand_Prismatic_Spring_--_2022_--_2519.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "032",
+  "file": "photos/stock/032.jpg",
+  "thumb": "photos/stock/thumbs/032.jpg",
+  "location": "Bergsfjorden, Senja, Norway",
+  "photographer": "Ximonic (Simo Räsänen)",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Ximonic",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wide_view_to_Bergsbotn,_Senja,_Troms,_Norway,_2015_September.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "033",
+  "file": "photos/stock/033.jpg",
+  "thumb": "photos/stock/thumbs/033.jpg",
+  "location": "Grose Valley, New South Wales, Australia",
+  "photographer": "Diliff",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Diliff",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Grose_Valley,_NSW,_Australia_-_April_2013.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "034",
+  "file": "photos/stock/034.jpg",
+  "thumb": "photos/stock/thumbs/034.jpg",
+  "location": "Kyzylkup, Mangystau, Kazakhstan",
+  "photographer": "Максат79",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:%D0%9C%D0%B0%D0%BA%D1%81%D0%B0%D1%8279",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%9A%D1%8B%D0%B7%D1%8B%D0%BB%D0%BA%D1%83%D0%BF_%D0%BD%D0%B0_%D1%80%D0%B0%D1%81%D1%81%D0%B2%D0%B5%D1%82%D0%B5.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "035",
+  "file": "photos/stock/035.jpg",
+  "thumb": "photos/stock/thumbs/035.jpg",
+  "location": "Lake Sils, Graubünden, Switzerland",
+  "photographer": "Hansueli Krapf",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Simisa",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:2011-08-01_10-31-42_Switzerland_Segl-Maria.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "036",
+  "file": "photos/stock/036.jpg",
+  "thumb": "photos/stock/thumbs/036.jpg",
+  "location": "Ponta de São Lourenço, Madeira, Portugal",
+  "photographer": "Richard Bartz",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Richard_Bartz",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ponta_de_S%C3%A3o_Louren%C3%A7o_north_north_east.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "037",
+  "file": "photos/stock/037.jpg",
+  "thumb": "photos/stock/thumbs/037.jpg",
+  "location": "Dzükou Valley, Nagaland, India",
+  "photographer": "Samudra Bikash Hazarika",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Samudra_bikash_hazarika",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Breathtaking_beauty_of_Dzukou_Valley_in_Manipur-Nagaland_border_(edit).jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "038",
+  "file": "photos/stock/038.jpg",
+  "thumb": "photos/stock/thumbs/038.jpg",
+  "location": "Mount Ngauruhoe, Tongariro National Park, New Zealand",
+  "photographer": "Eusebius",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Eusebius",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Le_Ngauruhoe_et_le_Ruapehu_vus_du_sommet_du_Tongariro.jpg",
+  "license": "CC BY 3.0"
+ },
+ {
+  "id": "039",
+  "file": "photos/stock/039.jpg",
+  "thumb": "photos/stock/thumbs/039.jpg",
+  "location": "Yosemite Falls, California, USA",
+  "photographer": "Diliff",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Diliff",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yosemite_Falls_from_trail,_Yosemite_NP,_CA,_US_-_Diliff.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "040",
+  "file": "photos/stock/040.jpg",
+  "thumb": "photos/stock/thumbs/040.jpg",
+  "location": "Gavarnie, Hautes-Pyrénées, France",
+  "photographer": "Moahim",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Moahim",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:2019_-_Parc_national_des_Pyrenees_-_Vall%C3%A9e_de_Gavarnie.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "041",
+  "file": "photos/stock/041.jpg",
+  "thumb": "photos/stock/thumbs/041.jpg",
+  "location": "Makhtesh Ramon, Negev, Israel",
+  "photographer": "Godot13",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Godot13",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Israel-2013-Aerial_00-Negev-Makhtesh_Ramon.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "042",
+  "file": "photos/stock/042.jpg",
+  "thumb": "photos/stock/thumbs/042.jpg",
+  "location": "Lake Willoughby, Vermont, USA",
+  "photographer": "King of Hearts",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:King_of_Hearts",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lake_Willoughby_October_2021_003.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "043",
+  "file": "photos/stock/043.jpg",
+  "thumb": "photos/stock/thumbs/043.jpg",
+  "location": "Stromboli, Aeolian Islands, Italy",
+  "photographer": "Carsten Steger",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Carsten_Steger",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aerial_image_of_Stromboli_(view_from_the_northeast).jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "044",
+  "file": "photos/stock/044.jpg",
+  "thumb": "photos/stock/thumbs/044.jpg",
+  "location": "Khumbu Valley, Solukhumbu, Nepal",
+  "photographer": "Faj2323",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Faj2323",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:120408_Pheriche_Pano_4k.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "045",
+  "file": "photos/stock/045.jpg",
+  "thumb": "photos/stock/thumbs/045.jpg",
+  "location": "Preveli Beach, Crete, Greece",
+  "photographer": "Uoaei1",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Uoaei1",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Preveli_Palm_Beach_Panorama_02.JPG",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "046",
+  "file": "photos/stock/046.jpg",
+  "thumb": "photos/stock/thumbs/046.jpg",
+  "location": "Kirkjufell, Snæfellsnes, Iceland",
+  "photographer": "Jakub Hałun",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Jakubhal",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kirkjufell,_Iceland,_20240714_1631_0713.jpg",
+  "license": "CC BY 4.0"
+ },
+ {
+  "id": "047",
+  "file": "photos/stock/047.jpg",
+  "thumb": "photos/stock/thumbs/047.jpg",
+  "location": "Los Gigantes, Tenerife, Spain",
+  "photographer": "Diego Delso",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q28147777",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Los_Gigantes,_Tenerife,_Espa%C3%B1a,_2012-12-16,_DD_10.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "048",
+  "file": "photos/stock/048.jpg",
+  "thumb": "photos/stock/thumbs/048.jpg",
+  "location": "Tasman Valley, Canterbury, New Zealand",
+  "photographer": "Krzysztof Golik",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Tournasol7",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Valley_of_Tasman_River_NZ_12.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "049",
+  "file": "photos/stock/049.jpg",
+  "thumb": "photos/stock/thumbs/049.jpg",
+  "location": "Ahaggar, Tamanrasset, Algeria",
+  "photographer": "Hamza-sia",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Hamza-sia",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dune_de_sable_au_parc_Culturel_De_l%27Ahaggar_crop.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "050",
+  "file": "photos/stock/050.jpg",
+  "thumb": "photos/stock/thumbs/050.jpg",
+  "location": "Lukmanier Pass, Graubünden, Switzerland",
+  "photographer": "Agnes Monkelbaan",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Agnes_Monkelbaan",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lukmanierpass,_Passo_del_Lucomagno._20-09-2022._(actm.)_04.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "051",
+  "file": "photos/stock/051.jpg",
+  "thumb": "photos/stock/thumbs/051.jpg",
+  "location": "Raftsundet, Nordland, Norway",
+  "photographer": "Ximonic (Simo Räsänen)",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Ximonic",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Afternoon_at_Tennfjorden,_Raftsundet,_Hinn%C3%B8ya,_Norway,_2015_September.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "052",
+  "file": "photos/stock/052.jpg",
+  "thumb": "photos/stock/thumbs/052.jpg",
+  "location": "Iguazu Falls, Paraná, Brazil",
+  "photographer": "Mayra Villas Boas Francisco Zamulko",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Mayravbf",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cataratas_do_Igua%C3%A7u_-_Vista_de_cima_alt.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "053",
+  "file": "photos/stock/053.jpg",
+  "thumb": "photos/stock/thumbs/053.jpg",
+  "location": "Mount Cheget, Kabardino-Balkaria, Russia",
+  "photographer": "Ekaterina Kuzmina",
+  "photographerUrl": "https://www.flickr.com/people/149760945@N03",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%90%D0%B7%D0%B0%D1%83-%D0%93%D0%B8%D1%82%D1%87%D0%B5-%D0%A7%D0%B5%D0%B3%D0%B5%D1%82-%D0%9A%D0%B0%D1%80%D0%B0%D0%B1%D0%B0%D1%88%D0%B8.jpg",
+  "license": "CC BY-SA 2.0"
+ },
+ {
+  "id": "054",
+  "file": "photos/stock/054.jpg",
+  "thumb": "photos/stock/thumbs/054.jpg",
+  "location": "Mono Lake, California, USA",
+  "photographer": "King of Hearts",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:King_of_Hearts",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mono_Lake_South_Tufa_August_2013_012.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "055",
+  "file": "photos/stock/055.jpg",
+  "thumb": "photos/stock/thumbs/055.jpg",
+  "location": "Aiguille de Belval, Normandy, France",
+  "photographer": "Jörg Braukmann",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Milseburg",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:C%C3%B4te_d%27Alb%C3%A2tre_%C3%A0_l%C2%B4Aiguille_de_Belval.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "056",
+  "file": "photos/stock/056.jpg",
+  "thumb": "photos/stock/thumbs/056.jpg",
+  "location": "Spiti Valley, Himachal Pradesh, India",
+  "photographer": "Timothy A. Gonsalves",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Tagooty",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Spiti_River_Kaza_Himachal_Jun18_D72_7232.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "057",
+  "file": "photos/stock/057.jpg",
+  "thumb": "photos/stock/thumbs/057.jpg",
+  "location": "Berchtesgaden National Park, Bavaria, Germany",
+  "photographer": "Dmytro Balkhovitin",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Balkhovitin",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Berchtesgaden_02.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "058",
+  "file": "photos/stock/058.jpg",
+  "thumb": "photos/stock/thumbs/058.jpg",
+  "location": "Wilsons Promontory, Victoria, Australia",
+  "photographer": "Dietmar Rabich",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q34788025",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wilsons_Promontory_National_Park_(AU),_Big_Drift_--_2019_--_1683.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "059",
+  "file": "photos/stock/059.jpg",
+  "thumb": "photos/stock/thumbs/059.jpg",
+  "location": "Fjallsárlón, Vatnajökull, Iceland",
+  "photographer": "Jakub Hałun",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Jakubhal",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fjalls%C3%A1rl%C3%B3n_glacier_lake,_Iceland,_20240719_1720_2774.jpg",
+  "license": "CC BY 4.0"
+ },
+ {
+  "id": "060",
+  "file": "photos/stock/060.jpg",
+  "thumb": "photos/stock/thumbs/060.jpg",
+  "location": "Mount Nam Xay, Vang Vieng, Laos",
+  "photographer": "Basile Morin",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Basile_Morin",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Green_karst_peaks_seen_from_the_top_of_Mount_Nam_Xay_a_sunny_morning_with_fog_Vang_Vieng_Laos.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "061",
+  "file": "photos/stock/061.jpg",
+  "thumb": "photos/stock/thumbs/061.jpg",
+  "location": "Passo Pordoi, Dolomites, Italy",
+  "photographer": "Bops92",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Bops92",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Passo_Pordoi-bops_01.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "062",
+  "file": "photos/stock/062.jpg",
+  "thumb": "photos/stock/thumbs/062.jpg",
+  "location": "Teno River, Lapland, Finland",
+  "photographer": "Ximonic (Simo Räsänen)",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Ximonic",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:National_road_970_and_river_Teno_near_Gistugurra,_Utsjoki,_Lapland,_Finland,_2021_September.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "063",
+  "file": "photos/stock/063.jpg",
+  "thumb": "photos/stock/thumbs/063.jpg",
+  "location": "Lake Mystery, Canterbury, New Zealand",
+  "photographer": "Michal Klajban",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Podzemnik",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lake_Mystery,_Canterbury,_New_Zealand_05.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "064",
+  "file": "photos/stock/064.jpg",
+  "thumb": "photos/stock/thumbs/064.jpg",
+  "location": "Serra dos Órgãos, Rio de Janeiro, Brazil",
+  "photographer": "Carlos Perez Couto",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Carlos_Perez_Couto",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Amanhecer_no_Hercules_--.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "065",
+  "file": "photos/stock/065.jpg",
+  "thumb": "photos/stock/thumbs/065.jpg",
+  "location": "Bozjyra, Mangystau, Kazakhstan",
+  "photographer": "Максат79",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:%D0%9C%D0%B0%D0%BA%D1%81%D0%B0%D1%8279",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%A7%D0%B8%D0%BD%D0%BA%D0%B8_%D0%BF%D0%BB%D0%B0%D1%82%D0%BE_%D0%A3%D1%81%D1%82%D1%8E%D1%80%D1%82._%D0%A3%D1%80%D0%BE%D1%87%D0%B8%D1%89%D0%B5_%D0%91%D0%BE%D0%B7%D0%B6%D1%8B%D1%80%D0%B0.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "066",
+  "file": "photos/stock/066.jpg",
+  "thumb": "photos/stock/thumbs/066.jpg",
+  "location": "Second Beach, Washington, USA",
+  "photographer": "King of Hearts",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:King_of_Hearts",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Second_Beach_Olympic_June_2018_008.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "067",
+  "file": "photos/stock/067.jpg",
+  "thumb": "photos/stock/thumbs/067.jpg",
+  "location": "Lag da Pigniu, Graubünden, Switzerland",
+  "photographer": "Dominicus Johannes Bergsma.",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Famberhorst",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panixersee_(Lag_da_Pigniu)_boven_Andiast._26-09-2025._(d.j.b.)_14.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "068",
+  "file": "photos/stock/068.jpg",
+  "thumb": "photos/stock/thumbs/068.jpg",
+  "location": "Amboseli National Park, Kajiado, Kenya",
+  "photographer": "Sergey Pesterev",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Black_Sickle",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kilimanjaro_from_Amboseli.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "069",
+  "file": "photos/stock/069.jpg",
+  "thumb": "photos/stock/thumbs/069.jpg",
+  "location": "Gorges du Tarn, Lozère, France",
+  "photographer": "Myrabella",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Myrabella",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:01_Gorges_du_Tarn_Roc_des_Hourtous.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "070",
+  "file": "photos/stock/070.jpg",
+  "thumb": "photos/stock/thumbs/070.jpg",
+  "location": "Kalo Daha, Ruby Valley, Nepal",
+  "photographer": "Megaurab09",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Megaurab09",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kalo_Daha_Lake_of_Ruby_Valley.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "071",
+  "file": "photos/stock/071.jpg",
+  "thumb": "photos/stock/thumbs/071.jpg",
+  "location": "Russell Falls, Tasmania, Australia",
+  "photographer": "Noodle snacks",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Noodle_snacks",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Russell_Falls_2.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "072",
+  "file": "photos/stock/072.jpg",
+  "thumb": "photos/stock/thumbs/072.jpg",
+  "location": "Silver Lake, Mono County, California, USA",
+  "photographer": "King of Hearts",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:King_of_Hearts",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Silver_Lake_Mammoth_September_2016_001.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "073",
+  "file": "photos/stock/073.jpg",
+  "thumb": "photos/stock/thumbs/073.jpg",
+  "location": "Hvannhagi, Suðuroy, Faroe Islands",
+  "photographer": "kallerna",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Kallerna",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hvannhagi_9.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "074",
+  "file": "photos/stock/074.jpg",
+  "thumb": "photos/stock/thumbs/074.jpg",
+  "location": "Mount Batok, East Java, Indonesia",
+  "photographer": "Jakub Hałun",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Jakubhal",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Batok,_view_from_Bromo_volcano,_Java,_Indonesia,_20220820_0539_9409.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "075",
+  "file": "photos/stock/075.jpg",
+  "thumb": "photos/stock/thumbs/075.jpg",
+  "location": "Gorgany, Ivano-Frankivsk Oblast, Ukraine",
+  "photographer": "Vitalii Bashkatov",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Vitalii_Bashkatov",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%A0%D0%BE%D0%B6%D0%B5%D0%B2%D0%B8%D0%B9_%D1%80%D0%B0%D0%BD%D0%BE%D0%BA_%D0%B2_%D2%90%D0%BE%D1%80%D2%91%D0%B0%D0%BD%D0%B0%D1%85.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "076",
+  "file": "photos/stock/076.jpg",
+  "thumb": "photos/stock/thumbs/076.jpg",
+  "location": "Scheideggseeli, Arosa, Switzerland",
+  "photographer": "Dominicus Johannes Bergsma",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Famberhorst",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Scheideggseeli_(1).jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "077",
+  "file": "photos/stock/077.jpg",
+  "thumb": "photos/stock/thumbs/077.jpg",
+  "location": "Isla del Pescado, Salar de Uyuni, Bolivia",
+  "photographer": "Diego Delso",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q28147777",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Isla_del_Pescado,_Salar_de_Uyuni,_Bolivia,_2016-02-04,_DD_42.JPG",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "078",
+  "file": "photos/stock/078.jpg",
+  "thumb": "photos/stock/thumbs/078.jpg",
+  "location": "Jasmund National Park, Rügen, Germany",
+  "photographer": "Moahim",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Moahim",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:2019_-_Nationalpark_Jasmund_-_03.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "079",
+  "file": "photos/stock/079.jpg",
+  "thumb": "photos/stock/thumbs/079.jpg",
+  "location": "Mount Bradley, Alaska, USA",
+  "photographer": "Ross Fowler",
+  "photographerUrl": "https://www.flickr.com/people/31971780@N03",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Matanuska-Susitna_Borough,_Alaska.jpg",
+  "license": "CC BY 2.0"
+ },
+ {
+  "id": "080",
+  "file": "photos/stock/080.jpg",
+  "thumb": "photos/stock/thumbs/080.jpg",
+  "location": "Roques de García, Tenerife, Spain",
+  "photographer": "H. Zell",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Llez",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Caldera_de_las_Ca%C3%B1adas_03.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "081",
+  "file": "photos/stock/081.jpg",
+  "thumb": "photos/stock/thumbs/081.jpg",
+  "location": "Lake Vuoksa, Karelia, Russia",
+  "photographer": "Dmitry A. Mottl",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Dmottl",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lake_Vuoksa_1.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "082",
+  "file": "photos/stock/082.jpg",
+  "thumb": "photos/stock/thumbs/082.jpg",
+  "location": "Laguna Honda, Potosí, Bolivia",
+  "photographer": "Diego Delso",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q28147777",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Laguna_Honda,_Bolivia,_2016-02-03,_DD_34.JPG",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "083",
+  "file": "photos/stock/083.jpg",
+  "thumb": "photos/stock/thumbs/083.jpg",
+  "location": "Birks of Aberfeldy, Perthshire, Scotland",
+  "photographer": "Eric Kilby",
+  "photographerUrl": "https://www.flickr.com/people/8749778@N06",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Birks_of_Aberfeldy_(55085667062).jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "084",
+  "file": "photos/stock/084.jpg",
+  "thumb": "photos/stock/thumbs/084.jpg",
+  "location": "Tofana di Rozes, Veneto, Italy",
+  "photographer": "Wolfgang Moroder",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Moroder",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tofana_di_Rozes_parete_sud_Dolomiti_Ampezzo.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "085",
+  "file": "photos/stock/085.jpg",
+  "thumb": "photos/stock/thumbs/085.jpg",
+  "location": "Chara Sands, Zabaykalsky Krai, Russia",
+  "photographer": "Ellebedeva",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Ellebedeva",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chara_Sands_before_it_rains_-_Kalarsky_District,_Zabaykalsky_Krai,_Siberia.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "086",
+  "file": "photos/stock/086.jpg",
+  "thumb": "photos/stock/thumbs/086.jpg",
+  "location": "Eiði, Eysturoy, Faroe Islands",
+  "photographer": "Sanshiro KUBOTA",
+  "photographerUrl": "https://www.flickr.com/people/126826552@N05",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lonely_house_on_the_coast_near_Ei%C3%B0i_-_Faroe_Islands_(50413406426).jpg",
+  "license": "CC BY 2.0"
+ },
+ {
+  "id": "087",
+  "file": "photos/stock/087.jpg",
+  "thumb": "photos/stock/thumbs/087.jpg",
+  "location": "Urungach Lake, Tashkent Region, Uzbekistan",
+  "photographer": "Arina Pan",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Arina_Pan",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%92%D0%B8%D0%B4_%D0%9D%D0%B8%D0%B6%D0%BD%D0%B8%D0%B9_%D0%A3%D1%80%D1%83%D0%BD%D0%B3%D0%B0%D1%87.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "088",
+  "file": "photos/stock/088.jpg",
+  "thumb": "photos/stock/thumbs/088.jpg",
+  "location": "Laugavegur Trail, Southern Region, Iceland",
+  "photographer": "Chmee2",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Chmee2",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Landscape_during_Laugavegur_hiking_trail_2-CA_reduced.jpg",
+  "license": "CC BY 3.0"
+ },
+ {
+  "id": "089",
+  "file": "photos/stock/089.jpg",
+  "thumb": "photos/stock/thumbs/089.jpg",
+  "location": "Alicudi, Aeolian Islands, Italy",
+  "photographer": "Carsten Steger",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Carsten_Steger",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aerial_image_of_Alicudi_(view_from_the_south).jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "090",
+  "file": "photos/stock/090.jpg",
+  "thumb": "photos/stock/thumbs/090.jpg",
+  "location": "Sawtooth Valley, Idaho, USA",
+  "photographer": "Acroterion",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Acroterion",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sawtooth_Valley_ID1.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "091",
+  "file": "photos/stock/091.jpg",
+  "thumb": "photos/stock/thumbs/091.jpg",
+  "location": "Wadi Bani Khalid, Sharqiyah, Oman",
+  "photographer": "Richard Bartz",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Richard_Bartz",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wadi_Bani_Khalid_East_RB.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "092",
+  "file": "photos/stock/092.jpg",
+  "thumb": "photos/stock/thumbs/092.jpg",
+  "location": "Lac de Montriond, Haute-Savoie, France",
+  "photographer": "Krzysztof Golik",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q51955005",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lac_de_Montriond_06.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "093",
+  "file": "photos/stock/093.jpg",
+  "thumb": "photos/stock/thumbs/093.jpg",
+  "location": "Skole Beskids, Lviv Oblast, Ukraine",
+  "photographer": "Михайло Пецкович",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Swift11",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%94%D0%BE_%D1%81%D0%B2%D1%96%D1%82%D0%B0%D0%BD%D0%BA%D1%83.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "094",
+  "file": "photos/stock/094.jpg",
+  "thumb": "photos/stock/thumbs/094.jpg",
+  "location": "Tsarap River, Zanskar, India",
+  "photographer": "Timothy A. Gonsalves",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Tagooty",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tsarap_Upstream_Phuktal_Zanskar_Oct22_R16_06699.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "095",
+  "file": "photos/stock/095.jpg",
+  "thumb": "photos/stock/thumbs/095.jpg",
+  "location": "Timanfaya, Lanzarote, Spain",
+  "photographer": "Luis Miguel Bugallo Sánchez (Lmbuga)",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Lmbuga",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Timanfaya-_Lanzarote-_Illas_Canarias-_Spain-T20.jpg",
+  "license": "CC BY-SA 3.0"
+ },
+ {
+  "id": "096",
+  "file": "photos/stock/096.jpg",
+  "thumb": "photos/stock/thumbs/096.jpg",
+  "location": "Port Campbell National Park, Victoria, Australia",
+  "photographer": "Dietmar Rabich",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q34788025",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Peterborough_(AU),_Port_Campbell_National_Park,_Worm_Bay_--_2019_--_0863.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "097",
+  "file": "photos/stock/097.jpg",
+  "thumb": "photos/stock/thumbs/097.jpg",
+  "location": "Rara Lake, Karnali, Nepal",
+  "photographer": "Prabeshsdev",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Prabeshsdev",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Heavenly_Rara_Lake_-_edited_2.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "098",
+  "file": "photos/stock/098.jpg",
+  "thumb": "photos/stock/thumbs/098.jpg",
+  "location": "Motta Naluns, Graubünden, Switzerland",
+  "photographer": "Agnes Monkelbaan",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Agnes_Monkelbaan",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Scuol-Motta_Naluns,_11-10-2024._(actm.)_21.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "099",
+  "file": "photos/stock/099.jpg",
+  "thumb": "photos/stock/thumbs/099.jpg",
+  "location": "Old Faithful, Wyoming, USA",
+  "photographer": "Dietmar Rabich",
+  "photographerUrl": "https://www.wikidata.org/wiki/Q34788025",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yellowstone_National_Park_(WY,_USA),_Old_Faithful_Geyser_--_2022_--_2599.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ {
+  "id": "100",
+  "file": "photos/stock/100.jpg",
+  "thumb": "photos/stock/thumbs/100.jpg",
+  "location": "Blue Lake, Aoraki/Mount Cook, New Zealand",
+  "photographer": "Krzysztof Golik",
+  "photographerUrl": "https://commons.wikimedia.org/wiki/User:Tournasol7",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Blue_Lake_in_Mount_Cook_National_Park.jpg",
+  "license": "CC BY-SA 4.0"
+ }
+]

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>New Tab</title>
+    <link rel="stylesheet" href="css/newtab.css" />
+    <script type="module" src="js/main.js"></script>
+  </head>
+  <body>
+    <div class="backgrounds" id="backgrounds"></div>
+
+    <main class="center" id="center">
+      <div class="clock three-col" id="clock" hidden>
+        <div class="left"></div>
+        <div class="widget">
+          <div class="shadow scrim-overlay"></div>
+          <div class="shadow scrim-multiply"></div>
+          <h1 class="time"><span class="hours"></span><span class="colon">:</span><span class="minutes"></span></h1>
+        </div>
+        <div class="right"></div>
+      </div>
+      <div class="greeting" id="greeting" hidden></div>
+    </main>
+
+    <footer class="bottom-left" id="bottom-left">
+      <div class="dash-item">
+        <button class="settings-toggle" id="settings-toggle" title="Settings"></button>
+      </div>
+      <div class="dash-item photo-info">
+        <p class="location" id="location"></p>
+      </div>
+    </footer>
+
+    <div class="popup photo-popup" id="photo-popup"></div>
+    <div class="settings-app" id="settings"></div>
+    <div class="background-uploader" id="uploader">Drop to upload backgrounds</div>
+  </body>
+</html>

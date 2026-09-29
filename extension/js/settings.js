@@ -1,0 +1,275 @@
+// Settings panel: General (widget toggles), Photos (My Photos / Nature / Favorites / History grids, Settings sub-tab)
+// and Night mode (photo off at night, "Go to sleep" greeting, hours).
+
+import { state, setSetting, save } from './store.js';
+import { icon } from './icons.js';
+import { esc, toggle, dismissOnOutside } from './dom.js';
+import { greeting, withName } from './greeting.js';
+import { isDark } from './night.js';
+import { getPhoto, exists, customKeys, stockKeys, addFiles, setCurrent, showNext, updateCustom, deleteCustom, toggleFavorite, periodFor } from './photos.js';
+
+const panel = document.getElementById('settings');
+const toggleBtn = document.getElementById('settings-toggle');
+const ui = { open: false, tab: 'general', photosTab: 'custom', editingId: null };
+
+const FEEDS = [
+  ['stock', 'Nature photos', 'See a new photo from the curated nature feed'],
+  ['custom', 'My photos', 'Add your own photos and change the photo anytime'],
+  ['favorites', 'Favorites', 'Rotate through the photos you marked with a heart'],
+];
+const FREQUENCIES = [['tab', 'Every new tab'], ['hour', 'Every hour'], ['random', 'Every 6-12 hours'], ['day', 'Every day']];
+const FITS = [['auto', 'Auto'], ['fill', 'Fill screen'], ['fit', 'Fit to screen']];
+
+// Opens the panel on a tab ("general" | "photos" | "night"), optionally on a photos sub-tab.
+export function openSettings(tab, photosTab) {
+  Object.assign(ui, { open: true, tab, editingId: null }, photosTab && { photosTab });
+  renderSettings();
+}
+
+export function closeSettings() {
+  ui.open = false;
+  ui.editingId = null;
+  renderSettings();
+}
+
+// One settings row with label, description and a right-side control.
+const option = (act, label, desc, control, extra = '') =>
+  `<div class="option" ${act}><div><div class="option-label">${label}</div><div class="option-description">${desc}</div></div>${control}</div>${extra}`;
+
+// "A | B | C" choice list; each button carries data-<name>="value".
+const optionsList = (name, choices, active) => `<div class="options-list-row">${choices.map(([v, label], i) =>
+  `${i ? '<span class="options-list-divider"></span>' : ''}<button class="options-list-option${active === v ? ' active' : ''}" data-${name}="${v}">${label}</button>`).join('')}</div>`;
+
+function generalPanel() {
+  const s = state.settings;
+  return `
+    <div class="setting-panel">
+      <div class="setting-panel-title">General</div>
+      <div class="setting-panel-description">Customize your dashboard</div>
+      <div class="section">
+        <div class="section-header">Apps</div>
+        ${option('data-setting="clockVisible"', 'Clock', 'Shows the time in the dashboard center', toggle(s.clockVisible))}
+        ${option('data-setting="greetingVisible"', 'Greeting', 'Personalized greeting in the center', toggle(s.greetingVisible))}
+        ${option('data-setting="hour12"', '24-hour clock', 'Show 14:30 instead of 2:30', toggle(!s.hour12))}
+      </div>
+    </div>`;
+}
+
+// Hour dropdown; carries data-hour="<setting>" so the change handler knows what to save.
+function hourSelect(setting) {
+  const { hour12 } = state.settings;
+  const label = (h) => (hour12 ? `${h % 12 || 12} ${h < 12 ? 'AM' : 'PM'}` : `${String(h).padStart(2, '0')}:00`);
+  const opts = Array.from({ length: 24 }, (_, h) => `<option value="${h}"${state.settings[setting] === h ? ' selected' : ''}>${label(h)}</option>`);
+  return `<select class="hour-select" data-hour="${setting}">${opts.join('')}</select>`;
+}
+
+// Mini new tab at `hour`: black when `dark`, else the current photo. Dimmed while its toggle is off.
+function nightPreview(hour, text, dark, on) {
+  const h = state.settings.hour12 ? hour % 12 || 12 : hour;
+  const thumb = !dark && getPhoto(state.current?.key)?.thumb;
+  return `<div class="night-preview${on ? '' : ' off'}"${thumb ? ` style="background-image:url('${esc(thumb)}')"` : ''}>
+    <div class="night-preview-time">${h}:00</div><div class="night-preview-greeting">${esc(text)}</div>
+  </div>`;
+}
+
+function nightPanel() {
+  const s = state.settings;
+  const photoOff = nightPreview(s.nightFrom, withName(greeting(s.nightFrom)), true, s.nightMode);
+  const sleep = nightPreview(s.sleepFrom, withName('Go to sleep'), isDark(s.sleepFrom), s.sleepGreeting);
+  return `
+    <div class="setting-panel">
+      <div class="setting-panel-title">Night mode</div>
+      <div class="setting-panel-description">Wind down in the evening</div>
+      <div class="section">
+        <div class="section-header">Night mode</div>
+        ${option('data-setting="nightMode"', 'Photo off at night', 'No photo, just the clock on black', toggle(s.nightMode), photoOff)}
+        ${option('data-setting="sleepGreeting"', 'Go to sleep', 'The greeting says "Go to sleep" instead of "Good evening"', toggle(s.sleepGreeting), sleep)}
+      </div>
+      <div class="section">
+        <div class="section-header">Hours</div>
+        ${option('', 'Photo off from', 'When the screen goes black', hourSelect('nightFrom'))}
+        ${option('', 'Go to sleep from', 'When the greeting changes', hourSelect('sleepFrom'))}
+        ${option('', 'Morning at', 'Photo and greeting back to normal', hourSelect('wakeAt'))}
+      </div>
+    </div>`;
+}
+
+// Thumbnail tile; `actions` are extra buttons shown on hover.
+function tile(key, actions = '') {
+  const p = getPhoto(key);
+  const active = state.current?.key === key ? ' active' : '';
+  return `<div class="tile-list-item${active}" data-key="${esc(key)}" title="${esc(p.location)}">
+    <div class="tile-list-image" style="background-image:url('${esc(p.thumb)}')"></div>
+    ${actions && `<div class="tile-list-actions">${actions}</div>`}
+  </div>`;
+}
+
+function tileButton(act, name, title) {
+  return `<button class="tile-action" data-act="${act}" title="${title}">${icon(name)}</button>`;
+}
+
+// Inline form for a custom photo's location and credit.
+function editForm() {
+  const p = getPhoto(`custom:${ui.editingId}`);
+  if (!p) return '';
+  return `
+    <div class="section edit-photo">
+      <div class="edit-thumb" style="background-image:url('${esc(p.thumb)}')"></div>
+      <div class="edit-fields">
+        <input data-field="location" placeholder="Location" value="${esc(p.location)}" spellcheck="false">
+        <input data-field="photographer" placeholder="Photographer (optional)" value="${esc(p.photographer)}" spellcheck="false">
+      </div>
+      <div class="edit-actions">
+        <button class="button button-neutral" data-act="cancel-edit">Cancel</button>
+        <button class="button button-primary" data-act="save-edit">Save</button>
+      </div>
+    </div>`;
+}
+
+// Photos > Settings sub-tab: feed source, rotation frequency and photo fit.
+function photoSettings() {
+  const { feed, frequency, fit } = state.settings;
+  return `
+    <div class="section">
+      <div class="section-header">Feeds</div>
+      ${FEEDS.map(([v, label, desc]) => option(`data-feed="${v}"`, label, desc, toggle(feed === v))).join('')}
+    </div>
+    <div class="section">
+      <div class="section-header">Display</div>
+      ${option('', 'Change photo', 'How often a new photo appears', optionsList('frequency', FREQUENCIES, frequency))}
+      ${option('', 'Photo fit', 'Auto shows the whole photo if filling crops too much', optionsList('fit', FITS, fit))}
+    </div>`;
+}
+
+function photoGrid() {
+  const t = ui.photosTab;
+  if (t === 'settings') return photoSettings();
+  const empty = (title, desc) =>
+    `<div class="settings-empty"><p class="settings-empty-title">${title}</p><p class="settings-empty-description">${desc}</p></div>`;
+  let keys;
+  let actions;
+  if (t === 'custom') {
+    keys = customKeys();
+    actions = tileButton('edit', 'pencil', 'Edit location') + tileButton('delete', 'x', 'Delete photo');
+    if (!keys.length) return empty('Personalize your dashboard with your own photos', 'Drag and drop a photo or click + Add Photo');
+  } else if (t === 'stock') {
+    keys = stockKeys();
+    actions = '';
+  } else if (t === 'favorites') {
+    keys = state.favorites.filter(exists);
+    actions = tileButton('unfavorite', 'x', 'Remove from favorites');
+    if (!keys.length) return empty('No favorite photos yet', 'Click the heart icon under a photo caption to start your collection');
+  } else {
+    keys = state.history.filter(exists);
+    actions = '';
+    if (!keys.length) return empty('No history yet', 'Photos you have seen will show up here');
+  }
+  return `${t === 'custom' && ui.editingId ? editForm() : ''}
+    <div class="backgrounds-list"><div class="tile-list">${keys.map((k) => tile(k, actions)).join('')}</div></div>`;
+}
+
+function photosPanel() {
+  const tabs = [['custom', 'My Photos'], ['stock', 'Nature'], ['favorites', 'Favorites'], ['history', 'History'], ['settings', 'Settings']];
+  return `
+    <div class="setting-panel">
+      <div class="panel-header-row">
+        <div>
+          <div class="setting-panel-title">Photos</div>
+          <div class="setting-panel-description">See a new inspiring photo every few hours</div>
+        </div>
+        ${ui.photosTab === 'settings' ? '' : '<label class="button button-primary list-add-button">+ Add Photo<input type="file" accept="image/*" multiple></label>'}
+      </div>
+      <div class="settings-subnav">
+        <div class="subnav-tabs">${tabs.map(([v, label]) => `<h4 class="${ui.photosTab === v ? 'active' : ''}" data-photos-tab="${v}">${label}</h4>`).join('')}</div>
+      </div>
+      ${photoGrid()}
+    </div>`;
+}
+
+// Renders the panel, keeping the content scroll position.
+export function renderSettings() {
+  panel.classList.toggle('open', ui.open);
+  toggleBtn.classList.toggle('open', ui.open);
+  toggleBtn.innerHTML = icon(ui.open ? 'appSettingsFill' : 'appSettings');
+  if (!ui.open && panel.firstChild) return;
+  if (panel.querySelector('.edit-photo input:focus')) return; // don't clobber typing
+  const scroll = panel.querySelector('.content')?.scrollTop || 0;
+  const nav = [['general', 'General'], ['photos', 'Photos'], ['night', 'Night mode']]
+    .map(([v, label]) => `<div class="item${ui.tab === v ? ' active' : ''}" data-tab="${v}">${label}</div>`).join('');
+  const panels = { general: generalPanel, photos: photosPanel, night: nightPanel };
+  panel.innerHTML = `<nav class="nav">${nav}</nav><div class="content">${panels[ui.tab]()}</div>`;
+  panel.querySelector('.content').scrollTop = scroll;
+}
+
+// Reads the edit form and saves it.
+function saveEdit() {
+  const val = (f) => panel.querySelector(`.edit-photo [data-field="${f}"]`).value.trim();
+  const id = ui.editingId;
+  ui.editingId = null;
+  document.activeElement?.blur();
+  updateCustom(id, { location: val('location'), photographer: val('photographer') });
+}
+
+// Handles every click inside the panel via data attributes.
+async function onClick(e) {
+  const t = e.target;
+  const d = (sel) => t.closest(sel);
+  if (d('[data-tab]')) return openSettings(d('[data-tab]').dataset.tab);
+  if (d('[data-photos-tab]')) return openSettings('photos', d('[data-photos-tab]').dataset.photosTab);
+  if (d('[data-setting]')) {
+    const { setting } = d('[data-setting]').dataset;
+    return setSetting(setting, !state.settings[setting]);
+  }
+  if (d('[data-feed]')) {
+    const { feed } = d('[data-feed]').dataset;
+    if (feed === state.settings.feed) return;
+    await save({ settings: { ...state.settings, feed } });
+    return showNext();
+  }
+  if (d('[data-frequency]')) {
+    // Keep the current photo; its period restarts under the new frequency.
+    const { frequency } = d('[data-frequency]').dataset;
+    return save({ settings: { ...state.settings, frequency }, current: state.current && { key: state.current.key, ...periodFor(frequency) } });
+  }
+  if (d('[data-fit]')) return setSetting('fit', d('[data-fit]').dataset.fit);
+  const act = d('[data-act]')?.dataset.act;
+  const key = d('[data-key]')?.dataset.key;
+  if (act === 'delete') return deleteCustom(key.slice(7));
+  if (act === 'unfavorite') return toggleFavorite(key);
+  if (act === 'edit') {
+    ui.editingId = key.slice(7);
+    renderSettings();
+    return panel.querySelector('.edit-photo input')?.focus();
+  }
+  if (act === 'cancel-edit') {
+    ui.editingId = null;
+    return renderSettings();
+  }
+  if (act === 'save-edit') return saveEdit();
+  if (key) return setCurrent(key);
+}
+
+export function initSettings() {
+  toggleBtn.addEventListener('click', () => (ui.open ? closeSettings() : openSettings(ui.tab)));
+  panel.addEventListener('click', onClick);
+  panel.addEventListener('change', async (e) => {
+    if (e.target.dataset.hour) return setSetting(e.target.dataset.hour, Number(e.target.value));
+    if (e.target.type !== 'file') return;
+    const keys = await addFiles([...e.target.files]);
+    if (keys.length) {
+      ui.photosTab = 'custom';
+      await setCurrent(keys[0]);
+    }
+  });
+  panel.addEventListener('keydown', (e) => {
+    if (!e.target.closest('.edit-photo')) return;
+    if (e.key === 'Enter') saveEdit();
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      ui.editingId = null;
+      e.target.blur();
+      renderSettings();
+    }
+  });
+  dismissOnOutside(() => [panel, toggleBtn], () => ui.open, closeSettings);
+}
