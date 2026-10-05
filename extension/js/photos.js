@@ -51,11 +51,13 @@ export function getPhoto(key) {
 export const stockKeys = () => stock.map((p) => `stock:${p.id}`);
 export const customKeys = () => custom.map((p) => `custom:${p.id}`);
 
-// Keys of the selected feed; empty feeds fall back to stock.
+const FEED_KEYS = { stock: stockKeys, custom: customKeys, favorites: () => state.favorites.filter(exists) };
+
+// Keys of every enabled feed as one pool; an empty pool falls back to stock.
 function activeFeed() {
-  const { feed } = state.settings;
-  const keys = feed === 'custom' ? customKeys() : feed === 'favorites' ? state.favorites.filter(exists) : stockKeys();
-  return keys.length ? { name: feed, keys } : { name: 'stock', keys: stockKeys() };
+  const feeds = Object.keys(FEED_KEYS).filter((f) => state.settings.feeds.includes(f));
+  const keys = [...new Set(feeds.flatMap((f) => FEED_KEYS[f]()))];
+  return keys.length ? { name: feeds.join('+'), keys } : { name: 'stock', keys: stockKeys() };
 }
 
 // Fisher-Yates shuffle (copy).
@@ -68,7 +70,7 @@ function shuffle(arr) {
   return a;
 }
 
-// Persisted shuffled order for a feed, synced with its current keys; order[i] is always the next photo.
+// Persisted shuffled order for a feed pool, synced with its current keys; order[i] is always the next photo.
 function syncQueue(name, keys) {
   const q = state.queues[name] || { order: [], i: 0 };
   const valid = new Set(keys);
@@ -77,7 +79,7 @@ function syncQueue(name, keys) {
   const known = new Set([...seen, ...rest]);
   rest = rest.concat(shuffle(keys.filter((k) => !known.has(k))));
   if (!rest.length) {
-    // Feed exhausted: start a new cycle, avoiding an immediate repeat.
+    // Pool exhausted: start a new cycle, avoiding an immediate repeat.
     seen = [];
     rest = shuffle(keys);
     if (rest.length > 1 && rest[0] === state.current?.key) rest.push(rest.shift());
@@ -106,11 +108,11 @@ function inPeriod(current, frequency, now = new Date()) {
 
 // Makes a photo the background now, starts a new period and records it in history.
 export function setCurrent(key, extra = {}) {
-  const history = [key, ...state.history.filter((k) => k !== key)].slice(0, 100);
+  const history = [key, ...state.history.filter((k) => k !== key)].slice(0, 50);
   return save({ current: { key, ...periodFor(state.settings.frequency) }, history, ...extra });
 }
 
-// Advances to the next photo of the active feed (Skip, new period, feed change).
+// Advances to the next photo of the enabled feeds (Skip, new period, feed change).
 export function showNext() {
   const { name, keys } = activeFeed();
   if (!keys.length) return;

@@ -1,8 +1,8 @@
-# Momentum Clone
+# Doorway
 
-A free, open source Chrome new tab that looks just like Momentum: a big clock, "Good morning Alex." and a beautiful photo behind it. You can use your own photos, which Momentum only allows on Plus for $4.99 a month, or pick from 100 nature photos that come with it. It works offline and needs no account.
+A free, open source Chrome new tab: a big clock, "Good morning Alex." and a beautiful photo behind it. Use your own photos or pick from 100 nature photos that come with it. It works offline and needs no account.
 
-More at [pawelkica.com/momentum](https://pawelkica.com/momentum). Omakase style, so fork it or open an issue if you'd like something changed.
+More at [pawelkica.com/doorway](https://pawelkica.com/doorway). Omakase style, so fork it or open an issue if you'd like something changed.
 
 ![New tab](docs/screenshots/1-new-tab.jpg)
 
@@ -10,13 +10,13 @@ More at [pawelkica.com/momentum](https://pawelkica.com/momentum). Omakase style,
 
 1. Clone the repo:
    ```
-   git clone https://github.com/Pawel-Kica/momentum-clone.git
+   git clone https://github.com/Pawel-Kica/doorway.git
    ```
 2. In Chrome, go to `chrome://extensions` and turn on **Developer mode** (top right).
 3. Click **Load unpacked** and pick the `extension` folder.
 4. Open a new tab and you're done!
 
-If you have the real Momentum installed, turn it off, because only one extension can take over the new tab.
+If another new tab extension is installed, turn it off, because only one extension can take over the new tab.
 
 ## How to use
 
@@ -43,8 +43,10 @@ Click the location text at the bottom left to favorite the photo or skip to the 
 ## Details
 
 - Night mode ends at 4:00 by default, the same hour "Good morning" starts.
-- Feeds: Nature photos, My photos or Favorites. An empty feed falls back to Nature photos.
-- Change photo: every new tab, every hour, every 6-12 hours (default, random) or every day (at 4:00). No repeats until the feed runs out.
+- Blocked websites (Settings > Distractions): type a site and it opens a black "blocked" page instead, subdomains included. `bbc.com` covers the whole site, `bbc.com/news` only that part. This is why the extension asks for access to all sites, it only uses it to redirect the ones on your lists.
+- Think twice (Settings > Distractions): a site on this list first asks "Do you really need it?". Yes opens it in that tab until you close the tab, No takes you back to the new tab.
+- Feeds: Nature photos, My photos and Favorites, turn on any mix and photos come from all of them. If they are all empty you get Nature photos.
+- Change photo: every new tab, every hour, every 6-12 hours (default, random) or every day (at 4:00). No repeats until the enabled feeds run out.
 - Photo fit: Fill screen crops the photo, Fit to screen shows all of it over a blurred copy. Auto (default) fits when filling would crop more than 35%.
 - Your photos are shrunk to 2560px and saved in this Chrome profile (IndexedDB). Removing the extension deletes them.
 - Nature photos are from Wikimedia Commons, credits in `extension/photos/stock.json`.
@@ -57,7 +59,7 @@ Headless Playwright Chromium with a temp profile, never your real Chrome:
 NODE_PATH=$(npm root -g) node tests/e2e.cjs
 ```
 
-Screenshots land in `/tmp/momentum-clone-shots/`.
+Screenshots land in `/tmp/doorway-shots/`.
 
 ## License
 

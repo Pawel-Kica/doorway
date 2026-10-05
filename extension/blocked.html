@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- Shown instead of a blocked website (Settings > Distractions), see js/blocker.js. js/blocked.js fills in the site. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blocked</title>
+    <link rel="icon" href="icons/icon48.png" />
+    <style>
+      html, body { height: 100%; margin: 0; }
+      body {
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3rem;
+        background: #000; color: #fff; user-select: none;
+        font: 500 2.1rem -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      img { width: 134px; height: 134px; }
+      p { margin: 0; padding: 0 1.5rem; text-align: center; text-wrap: balance; }
+      /* The site is highlighted in the icon's warm light, like on ask.html */
+      #site.named { color: #fde9b5; }
+    </style>
+  </head>
+  <body>
+    <img src="icons/icon512.png" alt="" />
+    <p>You blocked <span id="site">this</span> for a reason, so back to what matters.</p>
+    <script src="js/blocked.js"></script>
+  </body>
+</html>

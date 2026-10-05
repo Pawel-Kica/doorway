@@ -69,7 +69,7 @@ export function initPopup() {
     if (act === 'fav') toggleFavorite(key);
     if (act === 'skip') showNext();
     if (act === 'manage' || act === 'settings') {
-      // Both open Photos, like Momentum
+      // Both open Photos
       closePopup();
       openSettings('photos');
     }

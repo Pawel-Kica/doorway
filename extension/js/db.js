@@ -5,7 +5,7 @@ let dbPromise;
 // Opens (and creates on first run) the database.
 function open() {
   dbPromise ??= new Promise((resolve, reject) => {
-    const req = indexedDB.open('momentum-clone', 1);
+    const req = indexedDB.open('doorway', 1);
     req.onupgradeneeded = () => req.result.createObjectStore('photos', { keyPath: 'id' });
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);

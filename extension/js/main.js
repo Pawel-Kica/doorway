@@ -6,6 +6,7 @@ import { renderGreeting, tickGreeting } from './greeting.js';
 import { initPopup, renderPopup } from './popup.js';
 import { initSettings, renderSettings, openSettings } from './settings.js';
 import { isDark } from './night.js';
+import { syncBlocked } from './blocker.js';
 
 const $ = (id) => document.getElementById(id);
 let shownKey = null;
@@ -48,13 +49,16 @@ function applyFit(...layers) {
   }
 }
 
-// Big center clock; 24h shows hours without a leading zero, like Momentum.
+// Big center clock; 24h shows hours without a leading zero.
+// 12h adds a small A.M. / P.M. to the right.
 function renderClock() {
   const now = new Date();
   const h = now.getHours();
+  const { hour12 } = state.settings;
   const el = $('clock');
   el.hidden = !state.settings.clockVisible;
-  el.querySelector('.hours').textContent = state.settings.hour12 ? h % 12 || 12 : h;
+  el.querySelector('.hours').textContent = hour12 ? h % 12 || 12 : h;
+  el.querySelector('.ampm').textContent = hour12 ? (h < 12 ? 'A.M.' : 'P.M.') : '';
   el.querySelector('.minutes').textContent = String(now.getMinutes()).padStart(2, '0');
 }
 
@@ -128,6 +132,7 @@ function initDragAndDrop() {
 
 async function boot() {
   await loadState();
+  syncBlocked();
   renderNight();
   renderClock();
   renderGreeting();

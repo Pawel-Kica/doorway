@@ -1,11 +1,13 @@
-// Settings panel: General (widget toggles), Photos (My Photos / Nature / Favorites / History grids, Settings sub-tab)
-// and Night mode (photo off at night, "Go to sleep" greeting, hours).
+// Settings panel: General (widget toggles), Photos (My Photos / Nature / Favorites / History grids, Settings sub-tab),
+// Night mode (photo off at night, "Go to sleep" greeting, hours) and Distractions (blocked websites, Think twice websites).
 
 import { state, setSetting, save } from './store.js';
 import { icon } from './icons.js';
 import { esc, toggle, dismissOnOutside } from './dom.js';
 import { greeting, withName } from './greeting.js';
 import { isDark } from './night.js';
+import { setSites, canBlock } from './blocker.js';
+import { toSite } from './sites.js';
 import { getPhoto, exists, customKeys, stockKeys, addFiles, setCurrent, showNext, updateCustom, deleteCustom, toggleFavorite, periodFor } from './photos.js';
 
 const panel = document.getElementById('settings');
@@ -20,7 +22,7 @@ const FEEDS = [
 const FREQUENCIES = [['tab', 'Every new tab'], ['hour', 'Every hour'], ['random', 'Every 6-12 hours'], ['day', 'Every day']];
 const FITS = [['auto', 'Auto'], ['fill', 'Fill screen'], ['fit', 'Fit to screen']];
 
-// Opens the panel on a tab ("general" | "photos" | "night"), optionally on a photos sub-tab.
+// Opens the panel on a tab ("general" | "photos" | "night" | "distractions"), optionally on a photos sub-tab.
 export function openSettings(tab, photosTab) {
   Object.assign(ui, { open: true, tab, editingId: null }, photosTab && { photosTab });
   renderSettings();
@@ -94,6 +96,51 @@ function nightPanel() {
     </div>`;
 }
 
+// One list of sites in the Distractions tab: type a site to add it, x to remove it. `key` is the state list, "blocked" or "ask".
+// A typed URL keeps its path, so it covers only that part of the site (see sites.js).
+// `preview` is the inside of a mini copy of the page a listed site opens.
+function siteList(key, title, desc, button, preview) {
+  const sites = state[key].map((d) =>
+    `<div class="blocked-site" data-site="${esc(d)}"><span>${esc(d)}</span><button data-act="remove-site" title="Remove">${icon('x')}</button></div>`);
+  return `
+      <div class="section" data-list="${key}">
+        <div class="section-header">${title}</div>
+        <div class="option-description">${desc}</div>
+        <div class="site-preview"><img src="icons/icon128.png" alt="">${preview}</div>
+        <div class="block-add">
+          <input placeholder="https://example.com/" spellcheck="false">
+          <button class="button button-primary" data-act="add-site">${button}</button>
+        </div>
+        ${sites.join('')}
+      </div>`;
+}
+
+// Distractions tab: blocked websites, and Think twice websites that ask before they open.
+// The previews copy blocked.html and ask.html, with example.com as the site.
+function distractionsPanel() {
+  const blocked = '<p>You blocked <em>example.com</em> for a reason, so back to what matters.</p>';
+  const ask = `<p>Do you really need <em>example.com</em>?</p><div class="site-preview-answers"><span>Yes</span><span>No</span></div>`;
+  return `
+    <div class="setting-panel">
+      <div class="setting-panel-title">Distractions</div>
+      <div class="setting-panel-description">Stay away from websites that distract you</div>
+      ${canBlock() ? '' : '<div class="block-note">Nothing is blocked yet. Reload this extension on chrome://extensions to turn blocking on.</div>'}
+      ${siteList('blocked', 'Blocked websites', 'The site never opens, you see this instead', 'Block', blocked)}
+      ${siteList('ask', 'Think twice', 'The site opens only after you click Yes', 'Add', ask)}
+    </div>`;
+}
+
+// Adds the site typed into a Distractions list. Saving re-renders the panel right away with an empty input,
+// so focus goes back to it for the next site.
+function addSite(key) {
+  const input = () => panel.querySelector(`[data-list="${key}"] input`);
+  const site = toSite(input().value);
+  if (!site || state[key].includes(site)) return;
+  const saving = setSites(key, [...state[key], site]);
+  input().focus();
+  return saving;
+}
+
 // Thumbnail tile; `actions` are extra buttons shown on hover.
 function tile(key, actions = '') {
   const p = getPhoto(key);
@@ -126,13 +173,13 @@ function editForm() {
     </div>`;
 }
 
-// Photos > Settings sub-tab: feed source, rotation frequency and photo fit.
+// Photos > Settings sub-tab: feeds (any mix, at least one), rotation frequency and photo fit.
 function photoSettings() {
-  const { feed, frequency, fit } = state.settings;
+  const { feeds, frequency, fit } = state.settings;
   return `
     <div class="section">
       <div class="section-header">Feeds</div>
-      ${FEEDS.map(([v, label, desc]) => option(`data-feed="${v}"`, label, desc, toggle(feed === v))).join('')}
+      ${FEEDS.map(([v, label, desc]) => option(`data-feed="${v}"`, label, desc, toggle(feeds.includes(v)))).join('')}
     </div>
     <div class="section">
       <div class="section-header">Display</div>
@@ -194,9 +241,9 @@ export function renderSettings() {
   if (!ui.open && panel.firstChild) return;
   if (panel.querySelector('.edit-photo input:focus')) return; // don't clobber typing
   const scroll = panel.querySelector('.content')?.scrollTop || 0;
-  const nav = [['general', 'General'], ['photos', 'Photos'], ['night', 'Night mode']]
+  const nav = [['general', 'General'], ['photos', 'Photos'], ['night', 'Night mode'], ['distractions', 'Distractions']]
     .map(([v, label]) => `<div class="item${ui.tab === v ? ' active' : ''}" data-tab="${v}">${label}</div>`).join('');
-  const panels = { general: generalPanel, photos: photosPanel, night: nightPanel };
+  const panels = { general: generalPanel, photos: photosPanel, night: nightPanel, distractions: distractionsPanel };
   panel.innerHTML = `<nav class="nav">${nav}</nav><div class="content">${panels[ui.tab]()}</div>`;
   panel.querySelector('.content').scrollTop = scroll;
 }
@@ -221,9 +268,12 @@ async function onClick(e) {
     return setSetting(setting, !state.settings[setting]);
   }
   if (d('[data-feed]')) {
+    // Toggles one feed; the last enabled feed stays on.
     const { feed } = d('[data-feed]').dataset;
-    if (feed === state.settings.feed) return;
-    await save({ settings: { ...state.settings, feed } });
+    const on = state.settings.feeds;
+    const feeds = on.includes(feed) ? on.filter((f) => f !== feed) : [...on, feed];
+    if (!feeds.length) return;
+    await save({ settings: { ...state.settings, feeds } });
     return showNext();
   }
   if (d('[data-frequency]')) {
@@ -233,6 +283,9 @@ async function onClick(e) {
   }
   if (d('[data-fit]')) return setSetting('fit', d('[data-fit]').dataset.fit);
   const act = d('[data-act]')?.dataset.act;
+  const list = d('[data-list]')?.dataset.list;
+  if (act === 'add-site') return addSite(list);
+  if (act === 'remove-site') return setSites(list, state[list].filter((s) => s !== d('[data-site]').dataset.site));
   const key = d('[data-key]')?.dataset.key;
   if (act === 'delete') return deleteCustom(key.slice(7));
   if (act === 'unfavorite') return toggleFavorite(key);
@@ -262,6 +315,7 @@ export function initSettings() {
     }
   });
   panel.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.closest('.block-add')) return addSite(e.target.closest('[data-list]').dataset.list);
     if (!e.target.closest('.edit-photo')) return;
     if (e.key === 'Enter') saveEdit();
     if (e.key === 'Escape') {

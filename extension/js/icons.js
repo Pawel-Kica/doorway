@@ -1,4 +1,4 @@
-// Inline SVG icons (Lucide + Momentum custom), colored via currentColor.
+// Inline SVG icons (Lucide + custom), colored via currentColor.
 
 const lucide = (body) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;

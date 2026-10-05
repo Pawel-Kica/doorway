@@ -1,16 +1,17 @@
 // Headless end-to-end test of the extension. Run: NODE_PATH=$(npm root -g) node tests/e2e.cjs
 // Uses Playwright Chromium with a temp profile; never touches the real Chrome.
-// Screenshots go to /tmp/momentum-clone-shots/.
+// Screenshots go to /tmp/doorway-shots/.
 
 const { chromium } = require('playwright');
 const fs = require('fs');
+const http = require('http');
 const os = require('os');
 const path = require('path');
 const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'extension');
-const SHOTS = '/tmp/momentum-clone-shots';
+const SHOTS = '/tmp/doorway-shots';
 fs.mkdirSync(SHOTS, { recursive: true });
 
 let failures = 0;
@@ -22,7 +23,7 @@ function check(name, ok, detail = '') {
 // Uses extension/ as-is when stock.json exists, else a /tmp copy with a fixture stock.json.
 function prepareExtension() {
   if (fs.existsSync(path.join(SRC, 'photos/stock.json'))) return SRC;
-  const dir = '/tmp/momentum-clone-ext';
+  const dir = '/tmp/doorway-ext';
   execSync(`rm -rf ${dir} && cp -R "${SRC}" ${dir}`);
   const ids = fs.readdirSync(path.join(dir, 'photos/stock/thumbs')).map((f) => f.replace('.jpg', ''))
     .filter((id) => fs.existsSync(path.join(dir, `photos/stock/${id}.jpg`))).slice(0, 12);
@@ -39,10 +40,23 @@ async function launch(ext, opts = {}) {
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'mc-profile-'));
   return chromium.launchPersistentContext(profile, {
     headless: true, channel: 'chromium', viewport: { width: 1707, height: 890 }, deviceScaleFactor: 1.5,
-    // --hide-scrollbars mimics Mac overlay scrollbars so shots compare fairly with Momentum's
+    // --hide-scrollbars mimics Mac overlay scrollbars
     args: [`--disable-extensions-except=${ext}`, `--load-extension=${ext}`, '--hide-scrollbars'],
     ...opts,
   });
+}
+
+// Local site whose service worker serves its pages from cache, like Gmail does. Resolves to the running server.
+function cachedSite() {
+  const sw = `self.addEventListener('install', (e) => e.waitUntil(caches.open('c').then((c) => c.add('/mail/u/0/')).then(() => self.skipWaiting())));
+    self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+    self.addEventListener('fetch', (e) => e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request))));`;
+  const server = http.createServer((req, res) => {
+    const js = req.url === '/sw.js';
+    res.writeHead(200, { 'content-type': js ? 'text/javascript' : 'text/html' });
+    res.end(js ? sw : '<h1>cached site</h1><script>navigator.serviceWorker.register("/sw.js")</script>');
+  });
+  return new Promise((resolve) => server.listen(0, () => resolve(server)));
 }
 
 const HOUR = 3600e3;
@@ -93,7 +107,7 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   const fresh = await page.evaluate(async () => (await import('/js/store.js')).state);
   check('fresh install: frequency random, fit auto', fresh.settings.frequency === 'random' && fresh.settings.fit === 'auto', JSON.stringify(fresh.settings));
   check('fresh install: nextChangeAt 6-12h ahead', inWindow(fresh.current.nextChangeAt, new Date('2026-09-15T10:35:00').getTime()), fresh.current.nextChangeAt);
-  // Momentum text scaling: 152/54px, then 144/40px under 820px height
+  // Text scaling: 152/54px, then 144/40px under 820px height
   const sizes = () => page.evaluate(() => [
     getComputedStyle(document.querySelector('.clock .time')).fontSize, getComputedStyle(document.querySelector('.greeting-line')).fontSize].join(' '));
   check('clock/greeting size at 890px', (await sizes()) === '152px 54px', await sizes());
@@ -192,7 +206,7 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   check('uploaded photo becomes current', s.current.key.startsWith('custom:'), s.current.key);
   check('default location is file name', (await text(page, '#location')) === path.basename(photoJpgs[0], '.jpg'), await text(page, '#location'));
   const rec = await page.evaluate(async () => {
-    const db = await new Promise((r) => { const q = indexedDB.open('momentum-clone'); q.onsuccess = () => r(q.result); });
+    const db = await new Promise((r) => { const q = indexedDB.open('doorway'); q.onsuccess = () => r(q.result); });
     const all = await new Promise((r) => { const q = db.transaction('photos').objectStore('photos').getAll(); q.onsuccess = () => r(q.result); });
     const b = await createImageBitmap(all[0].blob);
     const t = await createImageBitmap(all[0].thumb);
@@ -257,8 +271,14 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   check('settings descriptions not squeezed', squeezed.length === 0, JSON.stringify(squeezed));
   await page.screenshot({ path: `${SHOTS}/07-photo-settings.png` });
   await page.click('[data-feed="custom"]');
+  await page.click('[data-feed="favorites"]');
+  check('three feeds on at once', (await page.locator('[data-feed] .toggle-switch.on').count()) === 3 && (await state(page)).settings.feeds.length === 3, JSON.stringify((await state(page)).settings.feeds));
+  await page.click('[data-feed="favorites"]');
+  await page.click('[data-feed="stock"]');
   s = await state(page);
-  check('feed custom shows custom photo', s.settings.feed === 'custom' && s.current.key.startsWith('custom:'), s.current.key);
+  check('feed custom shows custom photo', s.settings.feeds.join() === 'custom' && s.current.key.startsWith('custom:'), s.current.key);
+  await page.click('[data-feed="custom"]');
+  check('last feed stays on', (await state(page)).settings.feeds.join() === 'custom');
   await page.click('[data-frequency="tab"]');
   check('frequency saved', (await state(page)).settings.frequency === 'tab');
 
@@ -278,10 +298,12 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   // Rotation: 12h afternoon, stock feed without repeats, day persistence and 4:00 rollover
   page = await newTab(ctx, '2026-09-15T14:05:00');
   check('afternoon + 12h', (await text(page, '.clock .time')) === '2:05' && (await text(page, '.greeting .content')) === 'Good afternoon Alex.');
+  check('12h shows P.M.', (await text(page, '.clock .ampm')) === 'P.M.');
+  await page.screenshot({ path: `${SHOTS}/08b-clock-12h.png` });
   const rot = await page.evaluate(async () => {
     const photos = await import('/js/photos.js');
     const { state, save } = await import('/js/store.js');
-    await save({ queues: {}, settings: { ...state.settings, feed: 'stock', frequency: 'day' } });
+    await save({ queues: {}, settings: { ...state.settings, feeds: ['stock'], frequency: 'day' } });
     const n = photos.stockKeys().length;
     const seen = [];
     for (let i = 0; i < n; i++) { await photos.showNext(); seen.push(state.current.key); }
@@ -289,6 +311,7 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
     return { n, unique: new Set(seen).size, wrapNoRepeat: state.current.key !== seen[n - 1] };
   });
   check('stock feed cycles without repeats', rot.unique === rot.n && rot.wrapNoRepeat, JSON.stringify(rot));
+  check('history capped at 50', (await state(page)).history.length === 50);
   const dayKey = (await state(page)).current.key;
   await page.close();
   page = await newTab(ctx, '2026-09-16T03:30:00', '.clock .time'); // night: no photo layer to wait for
@@ -301,10 +324,22 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   // Favorites feed falls back to stock when empty; custom feed falls back when no custom photos
   await page.evaluate(async () => {
     const { state, save } = await import('/js/store.js');
-    await save({ favorites: [], settings: { ...state.settings, feed: 'favorites' } });
+    await save({ favorites: [], settings: { ...state.settings, feeds: ['favorites'] } });
     await (await import('/js/photos.js')).showNext();
   });
   check('empty favorites falls back to stock', (await state(page)).current.key.startsWith('stock:'));
+
+  // Settings saved before feeds could be combined hold a single `feed`
+  const migrated = await page.evaluate(async () => {
+    const { state, save, loadState } = await import('/js/store.js');
+    const { feeds, ...old } = state.settings;
+    await chrome.storage.local.set({ settings: { ...old, feed: 'custom' } });
+    await loadState();
+    const got = { feeds: state.settings.feeds, feed: state.settings.feed };
+    await save({ settings: { ...state.settings, feeds } });
+    return got;
+  });
+  check('old single feed becomes feeds', migrated.feeds.join() === 'custom' && migrated.feed === undefined, JSON.stringify(migrated));
 
   // Drag and drop upload
   await page.evaluate(async (url) => {
@@ -396,8 +431,171 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await page.keyboard.press('Escape');
   await page.close();
 
-  // Random 6-12h rotation: keep the photo until nextChangeAt, then advance and re-roll
-  const t0 = new Date('2026-09-17T10:00:00').getTime();
+  // Distractions tab: a typed URL blocks its domain (subdomains too), x unblocks it
+  page = await newTab(ctx);
+  // Domains of the block rules, or of the Think twice rules with `ask`
+  const rules = (p, ask = false) => p.evaluate(async (ask) => (await chrome.declarativeNetRequest.getDynamicRules())
+    .filter((r) => Boolean(r.action.redirect?.regexSubstitution.includes('ask.html')) === ask).flatMap((r) => r.condition.requestDomains), ask);
+  const blockList = '[data-list="blocked"]';
+  const askList = '[data-list="ask"]';
+  // Loads the URL in its own tab and returns where it ended up; a blocked load lands on blocked.html#<url>
+  // before any request leaves the browser. `shot` saves a screenshot of the result.
+  const landsOn = async (url, shot) => {
+    const site = await ctx.newPage();
+    await site.goto(url, { timeout: 15000 }).catch(() => {});
+    if (shot) await site.screenshot({ path: `${SHOTS}/${shot}` });
+    const end = site.url();
+    await site.close();
+    return end;
+  };
+  const blockedPage = await page.evaluate(() => chrome.runtime.getURL('blocked.html'));
+  await page.click('#settings-toggle');
+  await page.click('[data-tab="distractions"]');
+  // Each list shows a mini copy of the page its sites open, with example.com as the site
+  const sitePreviews = () => page.$$eval('.site-preview', (els) => els.map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
+  check('distractions previews', JSON.stringify(await sitePreviews()) === '["You blocked example.com for a reason, so back to what matters.","Do you really need example.com? Yes No"]', JSON.stringify(await sitePreviews()));
+  await page.fill(`${blockList} input`, 'not a site');
+  await page.keyboard.press('Enter');
+  check('junk input blocks nothing', (await page.locator('.blocked-site').count()) === 0);
+  await page.fill(`${blockList} input`, 'https://www.bbc.com/#top');
+  await page.keyboard.press('Enter');
+  await page.waitForSelector('.blocked-site');
+  await page.keyboard.type('youtube.com');
+  await page.click(`${blockList} [data-act="add-site"]`);
+  await page.waitForTimeout(300);
+  check('blocked sites listed', JSON.stringify(await page.$$eval('.blocked-site span', (els) => els.map((e) => e.textContent))) === '["bbc.com","youtube.com"]');
+  check('blocked sites saved as a rule', JSON.stringify([(await state(page)).blocked, await rules(page)]) === '[["bbc.com","youtube.com"],["bbc.com","youtube.com"]]', JSON.stringify(await rules(page)));
+  await page.screenshot({ path: `${SHOTS}/15-distractions-blocked.png` });
+  const bbc = await landsOn('https://www.bbc.com/', '16-blocked-page.png');
+  check('bbc.com lands on the blocked page', bbc === `${blockedPage}#https://www.bbc.com/`, bbc);
+  check('subdomain is blocked', (await landsOn('https://m.youtube.com/watch')) === `${blockedPage}#https://m.youtube.com/watch`);
+  // A link on another site is a different kind of navigation, it only reaches blocked.html because the page is web accessible
+  const linking = await ctx.newPage();
+  await linking.route('http://links.test/', (r) => r.fulfill({ contentType: 'text/html', body: '<a href="https://www.bbc.com/">bbc</a>' }));
+  await linking.goto('http://links.test/');
+  await linking.click('a');
+  await linking.waitForURL(`${blockedPage}#https://www.bbc.com/`, { timeout: 5000 }).catch(() => {});
+  check('link to a blocked site lands on the blocked page', linking.url() === `${blockedPage}#https://www.bbc.com/`, linking.url());
+  check('blocked page names the site', (await text(linking, 'p')) === 'You blocked bbc.com for a reason, so back to what matters.', await text(linking, 'p'));
+  await linking.close();
+  // A saved list with no rule behind it (the extension ran without the permission) heals on the next new tab
+  await page.evaluate(() => chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [1] }));
+  const healed = await newTab(ctx);
+  check('new tab rebuilds the rule from the saved list', (await rules(healed)).length === 2, JSON.stringify(await rules(healed)));
+  await healed.close();
+  await page.click('[data-site="bbc.com"] [data-act="remove-site"]');
+  await page.click('[data-site="youtube.com"] [data-act="remove-site"]');
+  await page.waitForTimeout(300);
+  check('unblock removes the rule', (await page.locator('.blocked-site').count()) === 0 && (await rules(page)).length === 0, JSON.stringify(await rules(page)));
+  check('unblocked site is not blocked', !(await landsOn('https://www.bbc.com/')).startsWith(blockedPage));
+
+  // Think twice: a listed site asks first. Yes opens it for that tab, No goes to the new tab page.
+  // ask.test is a made-up site served by the route below, so nothing here needs the network.
+  await ctx.route(/^http:\/\/(m\.)?ask\.test\//, (r) => r.fulfill({ contentType: 'text/html', body: '<h1>the site</h1>' }));
+  const askPage = await page.evaluate(() => chrome.runtime.getURL('ask.html'));
+  await page.fill(`${askList} input`, 'http://www.ask.test/');
+  await page.keyboard.press('Enter');
+  await page.waitForSelector(`${askList} .blocked-site`);
+  check('think twice site saved as a rule', JSON.stringify([(await state(page)).ask, await rules(page, true)]) === '[["ask.test"],["ask.test"]]', JSON.stringify(await rules(page, true)));
+  await page.screenshot({ path: `${SHOTS}/17-distractions-think-twice.png` });
+  const asking = await ctx.newPage();
+  await asking.goto('http://m.ask.test/watch?v=1&t=2').catch(() => {});
+  check('listed site lands on the ask page with its URL', asking.url() === `${askPage}#http://m.ask.test/watch?v=1&t=2`, asking.url());
+  check('ask page names the site', (await text(asking, 'p')) === 'Do you really need m.ask.test?', await text(asking, 'p'));
+  await asking.screenshot({ path: `${SHOTS}/18-ask-page.png` });
+  await asking.keyboard.press('y');
+  await asking.keyboard.press('Enter');
+  await asking.waitForTimeout(500);
+  check('keys do not answer', asking.url() === `${askPage}#http://m.ask.test/watch?v=1&t=2`, asking.url());
+  await asking.click('#yes');
+  await asking.waitForURL('http://m.ask.test/watch?v=1&t=2', { timeout: 5000 }).catch(() => {});
+  check('yes opens the site', asking.url() === 'http://m.ask.test/watch?v=1&t=2' && (await text(asking, 'h1')) === 'the site', asking.url());
+  await asking.goto('http://ask.test/other').catch(() => {});
+  check('same tab is not asked again', asking.url() === 'http://ask.test/other', asking.url());
+  await asking.close();
+  const refusing = await ctx.newPage();
+  await refusing.goto('http://ask.test/').catch(() => {});
+  check('a new tab asks again', refusing.url() === `${askPage}#http://ask.test/`, refusing.url());
+  await refusing.click('#no');
+  await refusing.waitForSelector('#clock', { timeout: 5000 }).catch(() => {});
+  check('no goes to the new tab page', (await refusing.locator('#clock').count()) === 1, refusing.url());
+  // Like blocked.html, a clicked link only reaches ask.html because the page is web accessible
+  await refusing.route('http://links.test/', (r) => r.fulfill({ contentType: 'text/html', body: '<a href="http://ask.test/from-link">ask</a>' }));
+  await refusing.goto('http://links.test/');
+  await refusing.click('a');
+  await refusing.waitForURL(`${askPage}#http://ask.test/from-link`, { timeout: 5000 }).catch(() => {});
+  check('link to a listed site lands on the ask page', refusing.url() === `${askPage}#http://ask.test/from-link`, refusing.url());
+  await refusing.close();
+  // Any site can link to ask.html with its own hash, only web addresses get a question
+  const bad = await ctx.newPage();
+  await bad.goto(`${askPage}#javascript:alert(1)`).catch(() => {});
+  await bad.waitForSelector('#clock', { timeout: 5000 }).catch(() => {});
+  check('ask page without a web address goes to the new tab page', (await bad.locator('#clock').count()) === 1, bad.url());
+  await bad.close();
+  await page.fill(`${blockList} input`, 'ask.test');
+  await page.keyboard.press('Enter');
+  await page.waitForSelector(`${blockList} .blocked-site`);
+  await page.waitForTimeout(300);
+  check('a site on both lists is blocked', (await landsOn('http://ask.test/')) === `${blockedPage}#http://ask.test/`);
+  await page.click(`${blockList} [data-act="remove-site"]`);
+  await page.click(`${askList} [data-act="remove-site"]`);
+  await page.waitForTimeout(300);
+  check('removing the site removes the rule', (await rules(page, true)).length === 0 && (await landsOn('http://ask.test/')) === 'http://ask.test/');
+
+  // A typed URL keeps its path and covers only that part of the site
+  await page.fill(`${askList} input`, 'http://ask.test/mail/u/0/#inbox');
+  await page.keyboard.press('Enter');
+  await page.waitForSelector(`${askList} .blocked-site`);
+  await page.waitForTimeout(300);
+  check('typed URL is saved with its path', JSON.stringify((await state(page)).ask) === '["ask.test/mail/u/0"]', JSON.stringify((await state(page)).ask));
+  check('the path asks', (await landsOn('http://ask.test/mail/u/0/')) === `${askPage}#http://ask.test/mail/u/0/`);
+  check('a page under the path asks', (await landsOn('http://m.ask.test/mail/u/0/x?y=1')) === `${askPage}#http://m.ask.test/mail/u/0/x?y=1`);
+  check('another path does not ask', (await landsOn('http://ask.test/mail/u/1/')) === 'http://ask.test/mail/u/1/');
+  check('a longer name does not ask', (await landsOn('http://ask.test/mail/u/01')) === 'http://ask.test/mail/u/01');
+  await page.click(`${askList} [data-act="remove-site"]`);
+  await page.waitForTimeout(300);
+
+  // A page served by a service worker never reaches the rules, js/background.js catches it instead.
+  // Only a secure origin can have a service worker, *.localhost counts as one.
+  const server = await cachedSite();
+  const cachedUrl = `http://sw.localhost:${server.address().port}/mail/u/0/`;
+  const cached = await ctx.newPage();
+  await cached.goto(cachedUrl);
+  await cached.waitForFunction(() => navigator.serviceWorker.controller, null, { timeout: 5000 }).catch(() => {});
+  await cached.close();
+  await page.fill(`${askList} input`, cachedUrl);
+  await page.keyboard.press('Enter');
+  await page.waitForSelector(`${askList} .blocked-site`);
+  const gmail = await ctx.newPage();
+  await gmail.goto(`${cachedUrl}#inbox`).catch(() => {});
+  await gmail.waitForURL(`${askPage}#${cachedUrl}#inbox`, { timeout: 5000 }).catch(() => {});
+  check('cached site lands on the ask page', gmail.url() === `${askPage}#${cachedUrl}#inbox`, gmail.url());
+  await gmail.click('#yes');
+  await gmail.waitForURL(`${cachedUrl}#inbox`, { timeout: 5000 }).catch(() => {});
+  await gmail.waitForTimeout(500);
+  check('yes opens the cached site and it stays open', gmail.url() === `${cachedUrl}#inbox`, gmail.url());
+  await gmail.goto(cachedUrl.replace('/u/0/', '/u/1/')).catch(() => {});
+  await gmail.waitForTimeout(500);
+  check('another path of the cached site does not ask', gmail.url() === cachedUrl.replace('/u/0/', '/u/1/'), gmail.url());
+  await gmail.close();
+  await page.fill(`${blockList} input`, cachedUrl);
+  await page.keyboard.press('Enter');
+  await page.waitForSelector(`${blockList} .blocked-site`);
+  const youtube = await ctx.newPage();
+  await youtube.goto(cachedUrl).catch(() => {});
+  await youtube.waitForURL(`${blockedPage}#${cachedUrl}`, { timeout: 5000 }).catch(() => {});
+  check('cached site on the blocked list lands on the blocked page', youtube.url() === `${blockedPage}#${cachedUrl}`, youtube.url());
+  await youtube.close();
+  server.close();
+  await page.click(`${blockList} [data-act="remove-site"]`);
+  await page.click(`${askList} [data-act="remove-site"]`);
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Escape');
+  await page.close();
+
+  // Random 6-12h rotation: keep the photo until nextChangeAt, then advance and re-roll.
+  // Starts at 5:00 so every tab below opens before 20:00, when night mode takes the photo away.
+  const t0 = new Date('2026-09-17T05:00:00').getTime();
   page = await newTab(ctx, t0);
   await page.click('#settings-toggle');
   await page.click('[data-tab="photos"]');

@@ -26,7 +26,7 @@ SCRIPTS = os.path.join(ROOT, "scripts")
 EXT = os.path.join(ROOT, "extension")
 OUT = os.path.join(EXT, "photos", "stock")
 API = "https://commons.wikimedia.org/w/api.php"
-UA = "momentum-clone/1.0 (https://github.com/Pawel-Kica/momentum-clone)"
+UA = "doorway/1.0 (https://github.com/Pawel-Kica/doorway)"
 
 CATEGORIES = [
     "Featured pictures of landscapes", "Featured pictures of mountains", "Featured pictures of the Alps",
@@ -153,7 +153,7 @@ def build():
         thumb = os.path.join(OUT, "thumbs", pid + ".jpg")
         if not os.path.exists(full):
             print(pid, pick["title"])
-            src = os.path.join(tempfile.gettempdir(), "momentum-stock-src.jpg")
+            src = os.path.join(tempfile.gettempdir(), "doorway-stock-src.jpg")
             open(src, "wb").write(get(ii["thumburl"], binary=True))
             # Encode from the source each time; sips skips re-encoding when nothing else changes.
             for q in (80, 72, 64, 56, 48, 40, 34):  # keep under ~900KB

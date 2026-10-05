@@ -1,9 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Momentum Clone",
+  "name": "Doorway",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0CWc25rGPw8xQE2vH+14oztzNrOnreXzlA0WTWAZH9HST/5zWN5JabSvHQgeaAFt0uYCsZK3EDygwl4XTa1PLMVWKniSHK0BjDBumJk66EpnWJID7Dt8k2QV5x2Tnc9EbuOOX9gs6++eTfc52Z5OwWlJFEcwAlwobyyK7TCxJUVdk3bFSy5he3V1gCx/sK+P7XqPrFNiMLlsr48uWGm1MvQuv2oFKAvl54EJEa4Kmyk3QGqve43dvbrssImAOn6irRtw7BU5daIOJxE+bV51Dlu4SdaT/4m1vLPjWu+lc1IqsIPLJKDzJhdFENQOln2CxzQTro8HbS4rPx5zvXBAOQIDAQAB",
   "version": "1.0.0",
   "description": "New tab with a clock, greeting and your own background photos.",
   "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
   "chrome_url_overrides": { "newtab": "newtab.html" },
-  "permissions": ["storage", "unlimitedStorage"]
+  "background": { "service_worker": "js/background.js", "type": "module" },
+  "permissions": ["storage", "unlimitedStorage", "declarativeNetRequest"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [{ "resources": ["blocked.html", "ask.html"], "matches": ["<all_urls>"] }]
 }

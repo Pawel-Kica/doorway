@@ -3,7 +3,7 @@
 // Escapes text for use inside innerHTML templates.
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
-// Toggle switch markup (Momentum style).
+// Toggle switch markup.
 export const toggle = (on) => `<span class="toggle-switch${on ? ' on' : ''}"></span>`;
 
 // Calls close() on mousedown outside all `els` or on Escape, while isOpen() is true.

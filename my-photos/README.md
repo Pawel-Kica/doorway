@@ -1,6 +1,6 @@
 # My photos
 
-The photos I use in my Momentum Clone, grab any you like. They aren't covered by the MIT license and belong to their photographers.
+The photos I use in Doorway, grab any you like. They aren't covered by the MIT license and belong to their photographers.
 
 - [Starship launch](Starship%20launch.jpg)
 - [Bugatti Tourbillon, Singapore](Bugatti%20Tourbillon%2C%20Singapore.jpg)

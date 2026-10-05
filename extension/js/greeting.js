@@ -10,7 +10,7 @@ let menuOpen = false;
 let editing = false;
 let lastText = '';
 
-// Momentum day parts: 4-12 morning, 12-17 afternoon, otherwise evening.
+// Day parts: 4-12 morning, 12-17 afternoon, otherwise evening.
 export function dayPart(hour) {
   if (hour >= 4 && hour < 12) return 'morning';
   if (hour >= 12 && hour < 17) return 'afternoon';

@@ -8,7 +8,7 @@ export const DEFAULTS = {
     hour12: false,
     includeName: true,
     name: '',
-    feed: 'stock', // stock | custom | favorites
+    feeds: ['stock'], // any of stock | custom | favorites, photos come from all of them
     frequency: 'random', // tab | hour | random (every 6-12h) | day
     fit: 'auto', // auto | fill | fit
     nightMode: true, // no photo at night, black behind the clock
@@ -19,14 +19,16 @@ export const DEFAULTS = {
   },
   current: null, // { key, slot } or { key, nextChangeAt } for 'random'
   favorites: [], // keys, newest first
-  history: [], // keys, newest first, max 100
-  queues: {}, // feed name -> { order: [keys], i }
+  history: [], // keys, newest first, max 50
+  queues: {}, // enabled feeds joined with "+" -> { order: [keys], i }
+  blocked: [], // sites blocker.js blocks, e.g. "bbc.com" or "bbc.com/news" (see sites.js)
+  ask: [], // sites that ask "Do you really need it?" first (Think twice)
 };
 
 export const state = structuredClone(DEFAULTS);
 const listeners = new Set();
 // Tells other open new tabs to reload state (a channel never delivers to its own sender).
-const channel = new BroadcastChannel('momentum-clone');
+const channel = new BroadcastChannel('doorway');
 
 // Loads persisted state into `state`.
 export async function loadState() {
@@ -34,6 +36,9 @@ export async function loadState() {
   for (const k of Object.keys(DEFAULTS)) {
     state[k] = k === 'settings' ? { ...DEFAULTS.settings, ...data.settings } : data[k] ?? structuredClone(DEFAULTS[k]);
   }
+  // Before feeds could be combined, settings held a single `feed`.
+  const { feed, ...settings } = state.settings;
+  if (feed) state.settings = data.settings.feeds ? settings : { ...settings, feeds: [feed] };
 }
 
 // Updates memory, notifies listeners, persists, then tells other tabs.
