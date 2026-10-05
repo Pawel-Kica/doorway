@@ -451,9 +451,9 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   const blockedPage = await page.evaluate(() => chrome.runtime.getURL('blocked.html'));
   await page.click('#settings-toggle');
   await page.click('[data-tab="distractions"]');
-  // Each list shows a mini copy of the page its sites open, with example.com as the site
+  // Each list shows a mini copy of the page its sites open, with example.com as the site. Think twice also shows the todo pill.
   const sitePreviews = () => page.$$eval('.site-preview', (els) => els.map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
-  check('distractions previews', JSON.stringify(await sitePreviews()) === '["You blocked example.com for a reason, so back to what matters.","Do you really need example.com? Yes No"]', JSON.stringify(await sitePreviews()));
+  check('distractions previews', JSON.stringify(await sitePreviews()) === '["You blocked example.com for a reason, so back to what matters.","Do you really need example.com? Yes Later No","Todos (2) Reply to Anna Check the voucher"]', JSON.stringify(await sitePreviews()));
   await page.fill(`${blockList} input`, 'not a site');
   await page.keyboard.press('Enter');
   check('junk input blocks nothing', (await page.locator('.blocked-site').count()) === 0);
@@ -489,7 +489,8 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   check('unblock removes the rule', (await page.locator('.blocked-site').count()) === 0 && (await rules(page)).length === 0, JSON.stringify(await rules(page)));
   check('unblocked site is not blocked', !(await landsOn('https://www.bbc.com/')).startsWith(blockedPage));
 
-  // Think twice: a listed site asks first. Yes opens it for that tab, No goes to the new tab page.
+  // Think twice: a listed site asks first. Yes asks what you need there and opens it for that tab,
+  // Later keeps a note or the link for next time, No goes to the new tab page.
   // ask.test is a made-up site served by the route below, so nothing here needs the network.
   await ctx.route(/^http:\/\/(m\.)?ask\.test\//, (r) => r.fulfill({ contentType: 'text/html', body: '<h1>the site</h1>' }));
   const askPage = await page.evaluate(() => chrome.runtime.getURL('ask.html'));
@@ -498,21 +499,58 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await page.waitForSelector(`${askList} .blocked-site`);
   check('think twice site saved as a rule', JSON.stringify([(await state(page)).ask, await rules(page, true)]) === '[["ask.test"],["ask.test"]]', JSON.stringify(await rules(page, true)));
   await page.screenshot({ path: `${SHOTS}/17-distractions-think-twice.png` });
+  const post = 'http://ask.test/r/singularity/comments/1w6f9xo/gpt_6_astra_benchmarks/';
+  const saving = await ctx.newPage();
+  await saving.goto(post).catch(() => {});
+  await saving.click('#later');
+  await saving.screenshot({ path: `${SHOTS}/18-ask-later.png` });
+  await saving.click('#save-link');
+  await saving.waitForSelector('#clock', { timeout: 5000 }).catch(() => {});
+  const saved = JSON.stringify((await state(page)).todos);
+  check('save link keeps the URL for later', saved === JSON.stringify({ 'ask.test': [{ later: true, text: 'Gpt 6 astra benchmarks', url: post }] }), saved);
+  await saving.close();
   const asking = await ctx.newPage();
   await asking.goto('http://m.ask.test/watch?v=1&t=2').catch(() => {});
   check('listed site lands on the ask page with its URL', asking.url() === `${askPage}#http://m.ask.test/watch?v=1&t=2`, asking.url());
-  check('ask page names the site', (await text(asking, 'p')) === 'Do you really need m.ask.test?', await text(asking, 'p'));
+  check('ask page names the site', (await text(asking, '#question p')) === 'Do you really need m.ask.test?', await text(asking, '#question p'));
   await asking.screenshot({ path: `${SHOTS}/18-ask-page.png` });
   await asking.keyboard.press('y');
   await asking.keyboard.press('Enter');
   await asking.waitForTimeout(500);
   check('keys do not answer', asking.url() === `${askPage}#http://m.ask.test/watch?v=1&t=2`, asking.url());
   await asking.click('#yes');
+  await asking.fill('#need input', 'Reply to Anna');
+  await asking.click('#open');
   await asking.waitForURL('http://m.ask.test/watch?v=1&t=2', { timeout: 5000 }).catch(() => {});
   check('yes opens the site', asking.url() === 'http://m.ask.test/watch?v=1&t=2' && (await text(asking, 'h1')) === 'the site', asking.url());
+  // js/todo.js: the pill counts what is still open, the list under it is always open, the saved link on it
+  const todo = (sel) => asking.locator(`doorway-todos ${sel}`);
+  await todo('.pill').waitFor({ timeout: 5000 }).catch(() => {});
+  const pill = await todo('.pill').innerText().catch(() => '');
+  check('the site shows what you came for', pill.replace(/\s+/g, ' ').trim() === 'Todos (2)', pill);
+  check('the list is open', !(await todo('.card').getAttribute('class')).includes('closed'));
+  check('the saved link is on the list', (await todo('a').getAttribute('href')) === post);
+  check('the input hides behind +', !(await todo('input').isVisible()) && (await todo('h3').innerText()) === 'You came to m.ask.test to:');
+  await todo('.add').click();
+  await todo('input').fill('Answer Ben');
+  await todo('input').press('Enter');
+  await asking.waitForTimeout(300);
+  check('+ adds an item', (await todo('.count').innerText()) === '(3)' && !(await todo('input').isVisible()), await todo('.count').innerText());
+  await asking.screenshot({ path: `${SHOTS}/19-todo-on-site.png` });
+  await todo('.box').nth(0).click();
+  await todo('.box').nth(1).click();
+  await todo('.box').nth(2).click();
+  check('all done shows I\'m done!', (await todo('.finish').isVisible()) && (await todo('.finish').innerText()) === "I'm done!");
   await asking.goto('http://ask.test/other').catch(() => {});
   check('same tab is not asked again', asking.url() === 'http://ask.test/other', asking.url());
-  await asking.close();
+  await todo('.pill').waitFor({ timeout: 5000 }).catch(() => {});
+  check('another page keeps the list open', !(await todo('.card').getAttribute('class')).includes('closed') && (await todo('.count').innerText()) === '(0)');
+  await todo('.finish').click();
+  await asking.waitForSelector('#clock', { timeout: 5000 }).catch(() => {});
+  check("I'm done! goes to the new tab page and clears the done items", (await asking.locator('#clock').count()) === 1 && JSON.stringify((await state(page)).todos) === '{"ask.test":[]}', JSON.stringify((await state(page)).todos));
+  await asking.goto('http://ask.test/other').catch(() => {});
+  check('after I\'m done! the tab asks again', asking.url() === `${askPage}#http://ask.test/other`, asking.url());
+  if (!asking.isClosed()) await asking.close();
   const refusing = await ctx.newPage();
   await refusing.goto('http://ask.test/').catch(() => {});
   check('a new tab asks again', refusing.url() === `${askPage}#http://ask.test/`, refusing.url());
@@ -571,6 +609,7 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await gmail.waitForURL(`${askPage}#${cachedUrl}#inbox`, { timeout: 5000 }).catch(() => {});
   check('cached site lands on the ask page', gmail.url() === `${askPage}#${cachedUrl}#inbox`, gmail.url());
   await gmail.click('#yes');
+  await gmail.click('#open');
   await gmail.waitForURL(`${cachedUrl}#inbox`, { timeout: 5000 }).catch(() => {});
   await gmail.waitForTimeout(500);
   check('yes opens the cached site and it stays open', gmail.url() === `${cachedUrl}#inbox`, gmail.url());

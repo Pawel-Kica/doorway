@@ -98,15 +98,15 @@ function nightPanel() {
 
 // One list of sites in the Distractions tab: type a site to add it, x to remove it. `key` is the state list, "blocked" or "ask".
 // A typed URL keeps its path, so it covers only that part of the site (see sites.js).
-// `preview` is the inside of a mini copy of the page a listed site opens.
-function siteList(key, title, desc, button, preview) {
+// `preview` is the inside of a mini copy of the page a listed site opens, `extra` an optional second preview next to it.
+function siteList(key, title, desc, button, preview, extra = '') {
   const sites = state[key].map((d) =>
     `<div class="blocked-site" data-site="${esc(d)}"><span>${esc(d)}</span><button data-act="remove-site" title="Remove">${icon('x')}</button></div>`);
   return `
       <div class="section" data-list="${key}">
         <div class="section-header">${title}</div>
         <div class="option-description">${desc}</div>
-        <div class="site-preview"><img src="icons/icon128.png" alt="">${preview}</div>
+        <div class="site-previews"><div class="site-preview"><img src="icons/icon128.png" alt="">${preview}</div>${extra}</div>
         <div class="block-add">
           <input placeholder="https://example.com/" spellcheck="false">
           <button class="button button-primary" data-act="add-site">${button}</button>
@@ -116,17 +116,21 @@ function siteList(key, title, desc, button, preview) {
 }
 
 // Distractions tab: blocked websites, and Think twice websites that ask before they open.
-// The previews copy blocked.html and ask.html, with example.com as the site.
+// The previews copy blocked.html and ask.html, with example.com as the site, and the todo pill js/todo.js puts on a site after Yes.
 function distractionsPanel() {
   const blocked = '<p>You blocked <em>example.com</em> for a reason, so back to what matters.</p>';
-  const ask = `<p>Do you really need <em>example.com</em>?</p><div class="site-preview-answers"><span>Yes</span><span>No</span></div>`;
+  const ask = `<p>Do you really need <em>example.com</em>?</p><div class="site-preview-answers"><span>Yes</span><span>Later</span><span>No</span></div>`;
+  const todos = `<div class="site-preview site-preview-page">
+          <div class="site-preview-pill"><img src="icons/icon128.png" alt="">Todos <em>(2)</em></div>
+          <div class="site-preview-card"><span>Reply to Anna</span><em>Check the voucher</em></div>
+        </div>`;
   return `
     <div class="setting-panel">
       <div class="setting-panel-title">Distractions</div>
       <div class="setting-panel-description">Stay away from websites that distract you</div>
       ${canBlock() ? '' : '<div class="block-note">Nothing is blocked yet. Reload this extension on chrome://extensions to turn blocking on.</div>'}
       ${siteList('blocked', 'Blocked websites', 'The site never opens, you see this instead', 'Block', blocked)}
-      ${siteList('ask', 'Think twice', 'The site opens only after you click Yes', 'Add', ask)}
+      ${siteList('ask', 'Think twice', 'The site asks why you need it, then keeps your answer in the corner', 'Add', ask, todos)}
     </div>`;
 }
 

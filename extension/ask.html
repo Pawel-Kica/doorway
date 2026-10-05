@@ -9,34 +9,60 @@
       html, body { height: 100%; margin: 0; }
       html { background: #000; }
       /* Nothing shows until js/ask.js has filled in the site, else the question jumps when the name lands */
-      body:has(#site:empty) { visibility: hidden; }
+      body:has(.site:empty) { visibility: hidden; }
       body {
         display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3rem;
         color: #fff; user-select: none;
         font: 500 2.1rem -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
       img { width: 134px; height: 134px; }
+      section { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+      section[hidden] { display: none; }
       p { margin: 0; padding: 0 1.5rem; text-align: center; text-wrap: balance; }
       /* The site is highlighted in the icon's warm light */
-      #site { color: #fde9b5; }
+      .site { color: #fde9b5; }
       .answers { display: flex; gap: 0.875rem; }
       button {
         min-width: 9rem; padding: 0.875rem 1.75rem; border: 0; border-radius: 1000rem; outline: none;
         background: hsl(0 0% 100% / 0.12); color: #fff; font: inherit; font-size: 1.25rem; cursor: pointer;
       }
       button:hover { background: hsl(0 0% 100% / 0.2); }
-      #no { background: hsl(226 42% 30%); }
-      #no:hover { background: hsl(226 42% 36%); }
+      .primary { background: hsl(226 42% 30%); }
+      .primary:hover { background: hsl(226 42% 36%); }
+      input {
+        width: min(34rem, 80vw); padding: 0.875rem 1.5rem; border: 0; border-radius: 1000rem; outline: none;
+        background: hsl(0 0% 100% / 0.08); color: #fff; font: inherit; font-size: 1.25rem; text-align: center; caret-color: #fde9b5;
+      }
     </style>
   </head>
   <body>
     <img src="icons/icon512.png" alt="" />
-    <p>Do you really need <span id="site"></span>?</p>
-    <div class="answers">
-      <!-- Mouse only: no shortcuts, and the buttons stay out of the Tab order -->
-      <button id="yes" tabindex="-1">Yes</button>
-      <button id="no" tabindex="-1">No</button>
-    </div>
+    <!-- Mouse only: no shortcuts, and the buttons stay out of the Tab order. Enter only submits what was typed. -->
+    <section id="question">
+      <p>Do you really need <span class="site"></span>?</p>
+      <div class="answers">
+        <button id="yes" tabindex="-1">Yes</button>
+        <button id="later" tabindex="-1">Later</button>
+        <button id="no" class="primary" tabindex="-1">No</button>
+      </div>
+    </section>
+    <section id="need" hidden>
+      <p>What do you need on <span class="site"></span>?</p>
+      <input spellcheck="false" />
+      <div class="answers">
+        <button class="back" tabindex="-1">Back</button>
+        <button id="open" class="primary" tabindex="-1">Open</button>
+      </div>
+    </section>
+    <section id="for-later" hidden>
+      <p>What do you want to do on <span class="site"></span> later?</p>
+      <input spellcheck="false" />
+      <div class="answers">
+        <button class="back" tabindex="-1">Back</button>
+        <button id="save-link" tabindex="-1">Save link</button>
+        <button id="ok" class="primary" tabindex="-1">OK</button>
+      </div>
+    </section>
     <script type="module" src="js/ask.js"></script>
   </body>
 </html>

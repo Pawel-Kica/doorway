@@ -23,6 +23,7 @@ export const DEFAULTS = {
   queues: {}, // enabled feeds joined with "+" -> { order: [keys], i }
   blocked: [], // sites blocker.js blocks, e.g. "bbc.com" or "bbc.com/news" (see sites.js)
   ask: [], // sites that ask "Do you really need it?" first (Think twice)
+  todos: {}, // Think twice entry -> [{ text, url?, later?, done? }], written by ask.js and todo.js
 };
 
 export const state = structuredClone(DEFAULTS);
