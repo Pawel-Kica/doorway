@@ -17,7 +17,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, { url }) => {
 });
 
 // js/todo.js asks from every page of a Think twice site whether to show the site's todo list there.
-// It shows only in a tab that got through with Yes: the answer is the list entry, or null.
+// The answer is the list entry the page falls under, or null. No check for the Yes pass: reloading the extension wipes
+// the session rules, and a page a service worker serves still opens without asking, the list should show there too.
 // "done" (I'm done!, everything on the list checked) does what No does: the tab loses its pass and goes to the new tab page.
 chrome.runtime.onMessage.addListener((msg, sender, reply) => {
   const tab = sender.tab?.id;
@@ -30,9 +31,7 @@ chrome.runtime.onMessage.addListener((msg, sender, reply) => {
   if (msg !== 'todos') return;
   (async () => {
     const { ask = [] } = await chrome.storage.local.get('ask');
-    const passes = await chrome.declarativeNetRequest.getSessionRules();
-    const site = ask.find((s) => covers(condition(s), sender.url)
-      && passes.some((r) => r.condition.tabIds?.includes(tab) && covers(r.condition, sender.url)));
+    const site = ask.find((s) => covers(condition(s), sender.url));
     reply(site ? { site } : null);
   })();
   return true;

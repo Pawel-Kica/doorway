@@ -1,6 +1,6 @@
-// Content script: the todo list of a Think twice site (filled on ask.html, see js/ask.js), shown on the site itself
-// in a tab that got through with Yes. A pill in the top right corner reads "Todos (n)" with n still open, the list
-// under it is always open and cannot be folded, on purpose.
+// Content script: the todo list of a Think twice site (filled on ask.html, see js/ask.js), shown on every page of the
+// site itself. A pill in the top right corner reads "Todos (n)" with n still open, the list under it is open on every
+// page load, a click on the pill folds or unfolds it.
 // Runs on every page, but only asks the background worker (js/background.js) on a host from the Think twice list.
 
 (async () => {
@@ -11,22 +11,27 @@
   if (!answer) return;
   const { site } = answer;
 
-  const el = document.createElement('doorway-todos');
+  // A plain div, not a custom element: Reddit hides every undefined custom element (:not(:defined) { visibility: hidden })
+  const el = document.createElement('div');
+  el.id = 'doorway-todos';
   const root = el.attachShadow({ mode: 'open' });
   root.innerHTML = `
     <style>
       :host { all: initial; }
-      .dw { position: fixed; top: 14px; right: 112px; z-index: 2147483647; color: #fff;
+      /* Pill and list are one dark green shape: the pill is a tab on the list's top right corner, a pill again when folded */
+      .dw { position: fixed; top: 9px; right: 117px; z-index: 2147483647; visibility: visible; display: flex; flex-direction: column; align-items: flex-end;
+        color: #fff; filter: drop-shadow(0 4px 16px #0009);
         font: 500 14px/1.4 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif; }
       .dw[hidden] { display: none; }
       button { font: inherit; color: inherit; border: 0; outline: none; cursor: pointer; }
-      .pill { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 6px; border-radius: 1000rem;
-        background: hsl(226 62% 46%); box-shadow: 0 2px 12px #0008; }
+      .pill { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 34px 4px 26px; border-radius: 18px 18px 0 0;
+        background: hsl(151 47% 24%); }
+      .folded .pill { height: 40px; padding-bottom: 0; border-radius: 1000rem; }
+      .folded .pill:hover { background: hsl(151 47% 28%); }
       .pill img { width: 24px; height: 24px; }
       .count, h3 em, .later, a { color: #fde9b5; font-style: normal; }
-      .card { position: absolute; top: 46px; right: 0; width: 340px; padding: 18px; box-sizing: border-box; border-radius: 0.625rem;
-        background: hsl(226 48% 26%); box-shadow: 0 0 0 1px hsl(226 62% 46%), 0 6px 30px #0009;
-      }
+      .card { width: 340px; padding: 18px; box-sizing: border-box; border-radius: 10px 0 10px 10px; background: hsl(151 47% 24%); }
+      .folded .card { display: none; }
       header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
       h3 { margin: 0; font: inherit; font-size: 1.05rem; }
       .add { width: 24px; height: 24px; margin: -2px -4px 0 0; padding: 0; flex-shrink: 0; border-radius: 50%; background: none;
@@ -45,12 +50,12 @@
       input[hidden] { display: none; }
       input { width: 100%; box-sizing: border-box; margin-top: 10px; padding: 8px 10px; border: 0; border-radius: 7px; outline: none;
         background: hsl(0 0% 100% / 0.07); color: #fff; font: 400 0.875rem -apple-system, BlinkMacSystemFont, sans-serif; }
-      .finish { width: 100%; margin-top: 14px; padding: 9px 14px; border-radius: 1000rem; background: hsl(226 62% 46%); }
-      .finish:hover { background: hsl(226 62% 52%); }
+      .finish { width: 100%; margin-top: 14px; padding: 9px 14px; border-radius: 1000rem; background: hsl(150 55% 34%); }
+      .finish:hover { background: hsl(150 55% 40%); }
       .finish[hidden] { display: none; }
     </style>
     <div class="dw" hidden>
-      <div class="pill"><img src="${chrome.runtime.getURL('icons/icon128.png')}" alt="">Todos <span class="count"></span></div>
+      <button class="pill"><img src="${chrome.runtime.getURL('icons/icon128.png')}" alt="">Todos <span class="count"></span></button>
       <div class="card">
         <header><h3>You came to <em>${here.replace(/^www\./, '')}</em> to:</h3><button class="add" title="Add">+</button></header>
         <div class="items"></div>
@@ -90,6 +95,7 @@
     }));
   }
 
+  $('.pill').onclick = () => $('.dw').classList.toggle('folded');
   // + shows the input, Enter adds the item and hides it again, Escape just hides it
   $('.add').onclick = () => { $('input').hidden = !$('input').hidden; $('input').focus(); };
   // Keys typed here stay here, so the site's own shortcuts (Gmail's "c" for compose) do not fire

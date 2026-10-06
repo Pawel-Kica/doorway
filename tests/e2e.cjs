@@ -492,7 +492,9 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   // Think twice: a listed site asks first. Yes asks what you need there and opens it for that tab,
   // Later keeps a note or the link for next time, No goes to the new tab page.
   // ask.test is a made-up site served by the route below, so nothing here needs the network.
-  await ctx.route(/^http:\/\/(m\.)?ask\.test\//, (r) => r.fulfill({ contentType: 'text/html', body: '<h1>the site</h1>' }));
+  await ctx.route(/^http:\/\/(m\.)?ask\.test\//, (r) => r.fulfill({ contentType: 'text/html',
+    // Reddit hides undefined custom elements like this, the todo list must still show
+    body: '<style>:not(:defined) { visibility: hidden }</style><h1>the site</h1>' }));
   const askPage = await page.evaluate(() => chrome.runtime.getURL('ask.html'));
   await page.fill(`${askList} input`, 'http://www.ask.test/');
   await page.keyboard.press('Enter');
@@ -524,17 +526,21 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await asking.waitForURL('http://m.ask.test/watch?v=1&t=2', { timeout: 5000 }).catch(() => {});
   check('yes opens the site', asking.url() === 'http://m.ask.test/watch?v=1&t=2' && (await text(asking, 'h1')) === 'the site', asking.url());
   // js/todo.js: the pill counts what is still open, the list under it is always open, the saved link on it
-  const todo = (sel) => asking.locator(`doorway-todos ${sel}`);
+  const todo = (sel) => asking.locator(`#doorway-todos ${sel}`);
   await todo('.pill').waitFor({ timeout: 5000 }).catch(() => {});
   const pill = await todo('.pill').innerText().catch(() => '');
   check('the site shows what you came for', pill.replace(/\s+/g, ' ').trim() === 'Todos (2)', pill);
-  check('the list is open', !(await todo('.card').getAttribute('class')).includes('closed'));
+  check('the list is open', await todo('.card').isVisible());
+  check('the list shows on a site that hides undefined elements', (await todo('.dw').evaluate((e) => getComputedStyle(e).visibility)) === 'visible');
   check('the saved link is on the list', (await todo('a').getAttribute('href')) === post);
   check('the input hides behind +', !(await todo('input').isVisible()) && (await todo('h3').innerText()) === 'You came to m.ask.test to:');
   await todo('.add').click();
   await todo('input').fill('Answer Ben');
   await todo('input').press('Enter');
   await asking.waitForTimeout(300);
+  await todo('.pill').click();
+  check('a click on the pill folds the list', !(await todo('.card').isVisible()));
+  await todo('.pill').click();
   check('+ adds an item', (await todo('.count').innerText()) === '(3)' && !(await todo('input').isVisible()), await todo('.count').innerText());
   await asking.screenshot({ path: `${SHOTS}/19-todo-on-site.png` });
   await todo('.box').nth(0).click();
