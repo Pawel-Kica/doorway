@@ -2,8 +2,12 @@
 // site itself. A pill in the top right corner reads "Todos (n)" with n still open, the list under it is open on every
 // page load, a click on the pill folds or unfolds it.
 // Runs on every page, but only asks the background worker (js/background.js) on a host from the Think twice list.
+// After a Reload on chrome://extensions this copy keeps running on pages that were open, cut off from the extension:
+// every chrome.* call then throws "Extension context invalidated", so clicks check chrome.runtime?.id first and do nothing.
 
 (async () => {
+  // XML pages (an RSS feed, an SVG) can't parse the list's HTML
+  if (!(document instanceof HTMLDocument)) return;
   const { ask = [] } = await chrome.storage.local.get('ask');
   const here = location.hostname;
   if (!ask.some((s) => { const h = s.split('/')[0]; return here === h || here.endsWith(`.${h}`); })) return;
@@ -66,8 +70,9 @@
   document.documentElement.append(el);
   const $ = (sel) => root.querySelector(sel);
 
-  // Rewrites the site's list in storage, render() follows through storage.onChanged
+  // Rewrites the site's list in storage, render() follows through storage.onChanged. Does nothing after a Reload (see top).
   const update = async (fn) => {
+    if (!chrome.runtime?.id) return;
     const { todos = {} } = await chrome.storage.local.get('todos');
     await chrome.storage.local.set({ todos: { ...todos, [site]: fn(todos[site] ?? []) } });
   };
@@ -109,6 +114,7 @@
     update((l) => [...l, { text }]);
   });
   $('.finish').onclick = async () => {
+    if (!chrome.runtime?.id) return;
     await update((l) => l.filter((t) => !t.done));
     chrome.runtime.sendMessage('done');
   };

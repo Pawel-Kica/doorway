@@ -46,6 +46,20 @@ async function launch(ext, opts = {}) {
   });
 }
 
+// Turns on what the Errors button on chrome://extensions shows (Load unpacked has it on, --load-extension does not).
+// Returns a function that reads the list: uncaught errors, rejected promises and console.error / warn from every part of the extension.
+async function errorList(ctx) {
+  const id = 'ejgofcoojgcbiimfkbidbiimnhpnfkol';
+  const page = await ctx.newPage();
+  await page.goto('chrome://extensions');
+  await page.evaluate(async (id) => {
+    await chrome.developerPrivate.updateProfileConfiguration({ inDeveloperMode: true });
+    await chrome.developerPrivate.updateExtensionConfiguration({ extensionId: id, errorCollection: true });
+  }, id);
+  return async () => (await page.evaluate((id) => chrome.developerPrivate.getExtensionInfo(id), id)).runtimeErrors
+    .map((e) => `${e.message} (${e.source.split('/').pop()})`);
+}
+
 // Local site whose service worker serves its pages from cache, like Gmail does. Resolves to the running server.
 function cachedSite() {
   const sw = `self.addEventListener('install', (e) => e.waitUntil(caches.open('c').then((c) => c.add('/mail/u/0/')).then(() => self.skipWaiting())));
@@ -92,6 +106,7 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
 (async () => {
   const ext = prepareExtension();
   const ctx = await launch(ext);
+  const errors = await errorList(ctx);
   const photoJpgs = fs.readdirSync(path.join(ext, 'photos/stock')).filter((f) => f.endsWith('.jpg')).slice(0, 2)
     .map((f) => path.join(ext, 'photos/stock', f));
 
@@ -492,9 +507,10 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   // Think twice: a listed site asks first. Yes asks what you need there and opens it for that tab,
   // Later keeps a note or the link for next time, No goes to the new tab page.
   // ask.test is a made-up site served by the route below, so nothing here needs the network.
-  await ctx.route(/^http:\/\/(m\.)?ask\.test\//, (r) => r.fulfill({ contentType: 'text/html',
+  await ctx.route(/^http:\/\/(m\.)?ask\.test\//, (r) => r.fulfill(r.request().url().endsWith('.xml')
+    ? { contentType: 'application/xml', body: '<?xml version="1.0"?><rss><channel><title>feed</title></channel></rss>' }
     // Reddit hides undefined custom elements like this, the todo list must still show
-    body: '<style>:not(:defined) { visibility: hidden }</style><h1>the site</h1>' }));
+    : { contentType: 'text/html', body: '<style>:not(:defined) { visibility: hidden }</style><h1>the site</h1>' }));
   const askPage = await page.evaluate(() => chrome.runtime.getURL('ask.html'));
   await page.fill(`${askList} input`, 'http://www.ask.test/');
   await page.keyboard.press('Enter');
@@ -547,6 +563,10 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await todo('.box').nth(1).click();
   await todo('.box').nth(2).click();
   check('all done shows I\'m done!', (await todo('.finish').isVisible()) && (await todo('.finish').innerText()) === "I'm done!");
+  // An RSS feed on the site is an XML page, the list's HTML can't go in there
+  await asking.goto('http://ask.test/feed.xml').catch(() => {});
+  await asking.waitForTimeout(500);
+  check('no list on an XML page', (await asking.locator('#doorway-todos').count()) === 0);
   await asking.goto('http://ask.test/other').catch(() => {});
   check('same tab is not asked again', asking.url() === 'http://ask.test/other', asking.url());
   await todo('.pill').waitFor({ timeout: 5000 }).catch(() => {});
@@ -664,6 +684,7 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   r = (await state(page)).current;
   check('random: skip re-rolls', r.key !== r2.key && r.nextChangeAt !== r2.nextChangeAt && inWindow(r.nextChangeAt, t1), JSON.stringify(r));
   await page.close();
+  check('chrome://extensions shows no errors', !(await errors()).length, JSON.stringify(await errors()));
   await ctx.close();
 
   // Photo fit, in a DPR 1 profile at 2560x1370 (full screen) and 1280x1370 (half screen)

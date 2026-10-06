@@ -2,7 +2,7 @@
 
 A free, open source Chrome new tab: a big clock, "Good morning Alex." and a beautiful photo behind it. Use your own photos or pick from 100 nature photos that come with it. It works offline and needs no account.
 
-More at [pawelkica.com/doorway](https://pawelkica.com/doorway). Omakase style, so fork it or open an issue if you'd like something changed.
+More at [pawelkica.com/doorway](https://pawelkica.com/doorway). For apps on your Mac there's [Doorway Desktop](https://github.com/Pawel-Kica/doorway-desktop). Omakase style, so fork it or open an issue if you'd like something changed.
 
 ![New tab](docs/screenshots/1-new-tab.jpg)
 
@@ -10,7 +10,7 @@ More at [pawelkica.com/doorway](https://pawelkica.com/doorway). Omakase style, s
 
 1. Clone the repo:
    ```
-   git clone https://github.com/Pawel-Kica/doorway.git
+   git clone https://github.com/Pawel-Kica/doorway-extension.git
    ```
 2. In Chrome, go to `chrome://extensions` and turn on **Developer mode** (top right).
 3. Click **Load unpacked** and pick the `extension` folder.
