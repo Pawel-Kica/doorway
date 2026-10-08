@@ -1,6 +1,7 @@
 // Think twice page. blocker.js sends a listed site here as ask.html#<url>.
 // Yes asks what you need there, then lets this tab open the site until the tab closes. Later asks what you want to do
-// there later, then goes to the new tab page, and No goes there right away. The answers are mouse only, on purpose.
+// there later, then goes to the new tab page, Save keeps the link for later and No goes there right away.
+// Keys answer the question too: y Yes, s Save, l Later, n or Enter No.
 // What you type lands in the site's todo list (storage `todos`), which js/todo.js shows on the site after a Yes.
 
 import { condition, covers } from './sites.js';
@@ -51,7 +52,7 @@ else {
     location.replace(target.href);
   };
 
-  // Later: OK keeps the note, Save link keeps this URL too (titled from its path when nothing was typed). Empty OK just leaves.
+  // Later, then OK keeps the note, empty OK just leaves. Save keeps this URL, titled from its path.
   const later = async (withLink) => {
     const text = $('#for-later input').value.trim();
     if (text || withLink) await updateList((list) => [...list, { text: text || linkTitle(target), later: true, ...(withLink && { url: target.href }) }]);
@@ -60,12 +61,21 @@ else {
 
   for (const el of document.querySelectorAll('.site')) el.textContent = target.hostname.replace(/^www\./, '');
   $('#yes').addEventListener('click', () => show('need'));
+  $('#save').addEventListener('click', () => later(true));
   $('#later').addEventListener('click', () => show('for-later'));
   $('#no').addEventListener('click', toNewTab);
   for (const el of document.querySelectorAll('.back')) el.addEventListener('click', () => show('question'));
   $('#open').addEventListener('click', open);
   $('#ok').addEventListener('click', () => later(false));
-  $('#save-link').addEventListener('click', () => later(true));
   $('#need input').addEventListener('keydown', (e) => e.key === 'Enter' && open());
   $('#for-later input').addEventListener('keydown', (e) => e.key === 'Enter' && later(false));
+
+  const keys = { y: '#yes', s: '#save', l: '#later', n: '#no', Enter: '#no' };
+  document.addEventListener('keydown', (e) => {
+    const button = keys[e.key];
+    if (!button || $('#question').hidden || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+    // Else the y would also land in the input Yes focuses
+    e.preventDefault();
+    $(button).click();
+  });
 }

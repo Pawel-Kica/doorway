@@ -1,11 +1,11 @@
-// Settings panel: General (widget toggles), Photos (My Photos / Nature / Favorites / History grids, Settings sub-tab),
+// Settings panel: General (widget toggles, your name), Photos (My Photos / Nature / Favorites / History grids, Settings sub-tab),
 // Night mode (photo off at night, "Go to sleep" greeting, hours) and Distractions (blocked websites, Think twice websites).
 
-import { state, setSetting, save } from './store.js';
+import { state, setSetting, save, emit } from './store.js';
 import { icon } from './icons.js';
 import { esc, toggle, dismissOnOutside } from './dom.js';
 import { greeting, withName } from './greeting.js';
-import { isDark } from './night.js';
+import { isDark, pinTime } from './night.js';
 import { setSites, canBlock } from './blocker.js';
 import { toSite } from './sites.js';
 import { getPhoto, exists, customKeys, stockKeys, addFiles, setCurrent, showNext, updateCustom, deleteCustom, toggleFavorite, periodFor } from './photos.js';
@@ -51,8 +51,10 @@ function generalPanel() {
       <div class="section">
         <div class="section-header">Apps</div>
         ${option('data-setting="clockVisible"', 'Clock', 'Shows the time in the dashboard center', toggle(s.clockVisible))}
-        ${option('data-setting="greetingVisible"', 'Greeting', 'Personalized greeting in the center', toggle(s.greetingVisible))}
         ${option('data-setting="hour12"', '24-hour clock', 'Show 14:30 instead of 2:30', toggle(!s.hour12))}
+        ${option('data-setting="greetingVisible"', 'Greeting', 'Personalized greeting in the center', toggle(s.greetingVisible))}
+        ${s.greetingVisible ? option('data-setting="includeName"', 'Include name', 'Greet you by name', toggle(s.includeName)) : ''}
+        ${s.greetingVisible && s.includeName ? option('', 'Your name', 'Shown in the greeting', `<input class="name-input" value="${esc(s.name)}" placeholder="Name" spellcheck="false">`) : ''}
       </div>
     </div>`;
 }
@@ -66,12 +68,40 @@ function hourSelect(setting) {
 }
 
 // Mini new tab at `hour`: black when `dark`, else the current photo. Dimmed while its toggle is off.
+// Clicking it plays the switch on the page itself (playPreview).
 function nightPreview(hour, text, dark, on) {
   const h = state.settings.hour12 ? hour % 12 || 12 : hour;
   const thumb = !dark && getPhoto(state.current?.key)?.thumb;
-  return `<div class="night-preview${on ? '' : ' off'}"${thumb ? ` style="background-image:url('${esc(thumb)}')"` : ''}>
+  return `<div class="night-preview${on ? '' : ' off'}" data-preview="${hour}"${thumb ? ` style="background-image:url('${esc(thumb)}')"` : ''}>
     <div class="night-preview-time">${h}:00</div><div class="night-preview-greeting">${esc(text)}</div>
+    <span class="night-preview-chip">${icon('maximize')}Preview</span>
   </div>`;
+}
+
+// Closes the panel and shows the page at a minute to `hour`, then at `hour`:00, then reopens Night mode.
+// Any click or key ends it early, and only ends it, so the click doesn't also land on the page.
+function playPreview(hour) {
+  const at = (h, m) => {
+    const d = new Date();
+    d.setHours(h, m, 0, 0);
+    pinTime(d);
+    emit();
+  };
+  const end = (e) => {
+    e?.stopPropagation();
+    if (e?.type === 'mousedown') addEventListener('click', (c) => c.stopPropagation(), { capture: true, once: true });
+    timers.forEach(clearTimeout);
+    removeEventListener('mousedown', end, true);
+    removeEventListener('keydown', end, true);
+    pinTime(null);
+    openSettings('night');
+    emit();
+  };
+  closeSettings();
+  at((hour + 23) % 24, 59);
+  const timers = [setTimeout(() => at(hour, 0), 1500), setTimeout(end, 5500)];
+  addEventListener('mousedown', end, true);
+  addEventListener('keydown', end, true);
 }
 
 function nightPanel() {
@@ -243,7 +273,7 @@ export function renderSettings() {
   toggleBtn.classList.toggle('open', ui.open);
   toggleBtn.innerHTML = icon(ui.open ? 'appSettingsFill' : 'appSettings');
   if (!ui.open && panel.firstChild) return;
-  if (panel.querySelector('.edit-photo input:focus')) return; // don't clobber typing
+  if (panel.querySelector('.edit-photo input:focus, .name-input:focus')) return; // don't clobber typing
   const scroll = panel.querySelector('.content')?.scrollTop || 0;
   const nav = [['general', 'General'], ['photos', 'Photos'], ['night', 'Night mode'], ['distractions', 'Distractions']]
     .map(([v, label]) => `<div class="item${ui.tab === v ? ' active' : ''}" data-tab="${v}">${label}</div>`).join('');
@@ -267,6 +297,7 @@ async function onClick(e) {
   const d = (sel) => t.closest(sel);
   if (d('[data-tab]')) return openSettings(d('[data-tab]').dataset.tab);
   if (d('[data-photos-tab]')) return openSettings('photos', d('[data-photos-tab]').dataset.photosTab);
+  if (d('[data-preview]')) return playPreview(Number(d('[data-preview]').dataset.preview));
   if (d('[data-setting]')) {
     const { setting } = d('[data-setting]').dataset;
     return setSetting(setting, !state.settings[setting]);
@@ -318,8 +349,14 @@ export function initSettings() {
       await setCurrent(keys[0]);
     }
   });
+  // The name saves as you type, so the greeting follows along. renderSettings skips while the field has focus,
+  // so nothing re-renders on blur and a click from the field straight onto a toggle still lands.
+  panel.addEventListener('input', (e) => {
+    if (e.target.matches('.name-input')) setSetting('name', e.target.value.trim());
+  });
   panel.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.target.closest('.block-add')) return addSite(e.target.closest('[data-list]').dataset.list);
+    if (e.key === 'Enter' && e.target.matches('.name-input')) return e.target.blur();
     if (!e.target.closest('.edit-photo')) return;
     if (e.key === 'Enter') saveEdit();
     if (e.key === 'Escape') {

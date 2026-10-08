@@ -37,7 +37,8 @@
       .card { width: 340px; padding: 18px; box-sizing: border-box; border-radius: 10px 0 10px 10px; background: hsl(151 47% 24%); }
       .folded .card { display: none; }
       header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
-      h3 { margin: 0; font: inherit; font-size: 1.05rem; }
+      /* px, not rem: rem follows the site's <html> font-size, YouTube's 10px shrank this to 10.5px */
+      h3 { margin: 0; font: inherit; font-size: 15px; }
       .add { width: 24px; height: 24px; margin: -2px -4px 0 0; padding: 0; flex-shrink: 0; border-radius: 50%; background: none;
         font-size: 20px; line-height: 24px; color: hsl(0 0% 100% / 0.7); }
       .add:hover { background: hsl(0 0% 100% / 0.1); color: #fff; }
@@ -53,7 +54,7 @@
       a:hover { text-decoration: underline; }
       input[hidden] { display: none; }
       input { width: 100%; box-sizing: border-box; margin-top: 10px; padding: 8px 10px; border: 0; border-radius: 7px; outline: none;
-        background: hsl(0 0% 100% / 0.07); color: #fff; font: 400 0.875rem -apple-system, BlinkMacSystemFont, sans-serif; }
+        background: hsl(0 0% 100% / 0.07); color: #fff; font: 400 14px -apple-system, BlinkMacSystemFont, sans-serif; }
       .finish { width: 100%; margin-top: 14px; padding: 9px 14px; border-radius: 1000rem; background: hsl(150 55% 34%); }
       .finish:hover { background: hsl(150 55% 40%); }
       .finish[hidden] { display: none; }

@@ -37,11 +37,12 @@
   </head>
   <body>
     <img src="icons/icon512.png" alt="" />
-    <!-- Mouse only: no shortcuts, and the buttons stay out of the Tab order. Enter only submits what was typed. -->
+    <!-- The question takes keys (y, s, l, n or Enter, see js/ask.js), the buttons stay out of the Tab order. -->
     <section id="question">
       <p>Do you really need <span class="site"></span>?</p>
       <div class="answers">
         <button id="yes" tabindex="-1">Yes</button>
+        <button id="save" tabindex="-1">Save</button>
         <button id="later" tabindex="-1">Later</button>
         <button id="no" class="primary" tabindex="-1">No</button>
       </div>
@@ -59,7 +60,6 @@
       <input spellcheck="false" />
       <div class="answers">
         <button class="back" tabindex="-1">Back</button>
-        <button id="save-link" tabindex="-1">Save link</button>
         <button id="ok" class="primary" tabindex="-1">OK</button>
       </div>
     </section>

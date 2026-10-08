@@ -1,12 +1,10 @@
-// Center greeting with the "..." menu (Include name, Edit your name) and inline name editing.
+// Center greeting; double-click the name to edit it inline. Include name and the name itself also live in Settings > General.
 
-import { state, setSetting, save } from './store.js';
-import { icon } from './icons.js';
-import { esc, toggle, dismissOnOutside } from './dom.js';
-import { isSleep } from './night.js';
+import { state, save } from './store.js';
+import { esc } from './dom.js';
+import { isSleep, now } from './night.js';
 
 const el = document.getElementById('greeting');
-let menuOpen = false;
 let editing = false;
 let lastText = '';
 
@@ -33,7 +31,7 @@ export function withName(base) {
 // No comma before the name: "Good evening Alex." reads as one sentence.
 function content() {
   const { name, includeName } = state.settings;
-  const base = greeting(new Date().getHours());
+  const base = greeting(now().getHours());
   if (editing) {
     return `${base} <span class="name-punctuation-no-wrap"><span class="name-wrapper"><span class="input-wrapper">` +
       `<input class="name editing" spellcheck="false" value="${esc(name)}"><span class="name hidden-span">${esc(name).replace(/ /g, '&nbsp;')}</span>` +
@@ -51,10 +49,6 @@ export function renderGreeting() {
   if (!el.firstChild) build();
   lastText = content();
   el.querySelector('.content').innerHTML = lastText;
-  el.classList.toggle('menu-open', menuOpen);
-  el.querySelector('.menu').innerHTML = `
-    <div class="dropdown-option" data-act="include">${icon('contact')}<span>Include name</span><span class="right">${toggle(state.settings.includeName)}</span></div>
-    <div class="dropdown-option" data-act="edit">${icon('pencil')}<span>Edit your name</span></div>`;
 }
 
 // Re-renders only when the day part changes (called every second).
@@ -62,41 +56,18 @@ export function tickGreeting() {
   if (!editing && content() !== lastText) renderGreeting();
 }
 
-// Builds the static structure and event handlers once.
-// Text is centered as a plain line (no grid max-content sizing, which Chrome measures ~3% too wide
-// at this font size) and the "..." hangs off a zero-width anchor right after the text.
+// Builds the static structure and the double-click handler once.
+// Text is centered as a plain line (no grid max-content sizing, which Chrome measures ~3% too wide at this font size).
 function build() {
-  el.innerHTML = `<h2 class="greeting-line"><span class="text-wrap"><span class="shadow scrim-overlay"></span><span class="shadow scrim-multiply"></span><span class="content"></span></span><span class="more-anchor"><span class="more">
-      <button class="more-btn" title="More">${icon('ellipsis')}</button>
-      <span class="dropdown menu"></span>
-    </span></span></h2>`;
-
-  el.querySelector('.more-btn').addEventListener('click', () => setMenu(!menuOpen));
+  el.innerHTML = `<h2 class="greeting-line"><span class="text-wrap"><span class="shadow scrim-overlay"></span><span class="shadow scrim-multiply"></span><span class="content"></span></span></h2>`;
   el.querySelector('.content').addEventListener('dblclick', (e) => {
     if (e.target.closest('.name')) startEditing();
-    else setMenu(true);
   });
-  el.querySelector('.menu').addEventListener('click', (e) => {
-    const act = e.target.closest('[data-act]')?.dataset.act;
-    if (act === 'include') setSetting('includeName', !state.settings.includeName);
-    if (act === 'edit') {
-      menuOpen = false;
-      if (!state.settings.includeName) setSetting('includeName', true);
-      startEditing();
-    }
-  });
-  dismissOnOutside(() => [el.querySelector('.more')], () => menuOpen, () => setMenu(false));
-}
-
-function setMenu(open) {
-  menuOpen = open;
-  el.classList.toggle('menu-open', open);
 }
 
 // Swaps the name for an auto-sizing input. Enter/blur saves (empty keeps the old name), Esc reverts.
 function startEditing() {
   editing = true;
-  el.classList.remove('menu-open');
   el.querySelector('.content').innerHTML = content();
   const input = el.querySelector('input.name');
   const mirror = el.querySelector('.hidden-span');

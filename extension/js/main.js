@@ -5,7 +5,7 @@ import { loadPhotos, ensureCurrent, getPhoto, preloadNext, addFiles, setCurrent 
 import { renderGreeting, tickGreeting } from './greeting.js';
 import { initPopup, renderPopup } from './popup.js';
 import { initSettings, renderSettings, openSettings } from './settings.js';
-import { isDark } from './night.js';
+import { isDark, now } from './night.js';
 import { syncBlocked } from './blocker.js';
 
 const $ = (id) => document.getElementById(id);
@@ -14,7 +14,7 @@ let shownKey = null;
 // Swaps the background to the current photo: decode first, then fade (0.3s first load, 2s after).
 // Nothing is rendered during night hours, so a tab opened then never flashes a photo.
 async function renderBackground() {
-  if (isDark(new Date().getHours())) return;
+  if (isDark(now().getHours())) return;
   const photo = getPhoto(state.current?.key);
   if (!photo || photo.key === shownKey) return;
   const first = shownKey === null;
@@ -52,21 +52,21 @@ function applyFit(...layers) {
 // Big center clock; 24h shows hours without a leading zero.
 // 12h adds a small A.M. / P.M. to the right.
 function renderClock() {
-  const now = new Date();
-  const h = now.getHours();
+  const time = now();
+  const h = time.getHours();
   const { hour12 } = state.settings;
   const el = $('clock');
   el.hidden = !state.settings.clockVisible;
   el.querySelector('.hours').textContent = hour12 ? h % 12 || 12 : h;
   el.querySelector('.ampm').textContent = hour12 ? (h < 12 ? 'A.M.' : 'P.M.') : '';
-  el.querySelector('.minutes').textContent = String(now.getMinutes()).padStart(2, '0');
+  el.querySelector('.minutes').textContent = String(time.getMinutes()).padStart(2, '0');
 }
 
 // Bottom-left location text, hidden when the photo has none or when it is not on screen.
 function renderLocation() {
   const el = $('location');
   el.textContent = getPhoto(state.current?.key)?.location || '';
-  el.hidden = !el.textContent || isDark(new Date().getHours());
+  el.hidden = !el.textContent || isDark(now().getHours());
 }
 
 // During night hours (Settings > Night mode) the page is plain black behind the clock, no photo at all.
@@ -74,11 +74,11 @@ function renderLocation() {
 // in the morning the photo comes back. Rotation underneath is untouched, this is only a display rule.
 let dark = null;
 function renderNight() {
-  const now = isDark(new Date().getHours());
-  if (now === dark) return;
-  dark = now;
-  document.documentElement.classList.toggle('night', now);
-  if (!now) return renderBackground();
+  const on = isDark(now().getHours());
+  if (on === dark) return;
+  dark = on;
+  document.documentElement.classList.toggle('night', on);
+  if (!on) return renderBackground();
   setTimeout(() => {
     if (!dark) return; // back in daylight before the fade finished
     $('backgrounds').replaceChildren();

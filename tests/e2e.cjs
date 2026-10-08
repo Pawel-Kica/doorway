@@ -131,15 +131,27 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await page.setViewportSize({ width: 1707, height: 890 });
   await page.screenshot({ path: `${SHOTS}/01-home-noname.png` });
 
-  // 3. Greeting menu and name editing
-  await page.hover('.greeting .content');
-  await page.click('.more-btn');
-  check('menu has no mantra', !(await page.locator('.menu').innerText()).includes('mantra'));
-  await page.click('[data-act="edit"]');
-  await page.keyboard.type('Alex');
-  await page.keyboard.press('Enter');
+  // 3. Name in Settings > General, then inline name editing
+  check('greeting has no menu', !(await page.locator('#greeting button').count()));
+  await page.click('#settings-toggle');
+  await page.waitForTimeout(300);
+  // Typing, then clicking straight on a toggle: both stick
+  await page.fill('.name-input', 'Sam');
+  await page.click('[data-setting="includeName"]');
+  const named = (await state(page)).settings;
+  check('name saved while typing, include name off', named.name === 'Sam' && !named.includeName, JSON.stringify(named));
+  check('include name off', (await text(page, '.greeting .content')) === 'Good morning.');
+  check('Your name hidden while Include name is off', !(await page.locator('.name-input').count()));
+  await page.click('[data-setting="greetingVisible"]');
+  check('Include name hidden while Greeting is off', !(await page.locator('[data-setting="includeName"]').count()));
+  await page.click('[data-setting="greetingVisible"]');
+  await page.click('[data-setting="includeName"]');
+  await page.fill('.name-input', 'Alex');
+  await page.press('.name-input', 'Enter');
   check('name saved', (await text(page, '.greeting .content')) === 'Good morning Alex.', await text(page, '.greeting .content'));
   check('name persisted', (await state(page)).settings.name === 'Alex');
+  await page.screenshot({ path: `${SHOTS}/02-general-name.png` });
+  await page.keyboard.press('Escape');
   await page.dblclick('.greeting .name');
   await page.keyboard.type('Nope');
   await page.keyboard.press('Escape');
@@ -153,16 +165,6 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   const inputW = await page.locator('input.name').evaluate((el) => el.offsetWidth / parseFloat(getComputedStyle(el).fontSize));
   check('long name input capped at 12em', inputW <= 12.1, inputW);
   await page.keyboard.press('Escape');
-  await page.hover('.greeting .content');
-  await page.click('.more-btn');
-  await page.click('[data-act="include"]');
-  check('include name off', (await text(page, '.greeting .content')) === 'Good morning.');
-  await page.click('[data-act="include"]');
-  await page.mouse.move(1340, 560);
-  await page.waitForTimeout(200);
-  await page.screenshot({ path: `${SHOTS}/02-greeting-menu.png` });
-  await page.mouse.click(300, 300);
-  check('menu closes on outside click', !(await page.locator('#greeting').evaluate((el) => el.classList.contains('menu-open'))));
 
   // 4. Photo popup
   const before = (await state(page)).current.key;
@@ -421,7 +423,8 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await page.waitForTimeout(200);
   await page.screenshot({ path: `${SHOTS}/14-night-settings.png` });
   const previews = (p) => p.$$eval('.night-preview', (els) => els.map((e) => ({
-    text: e.innerText.replace(/\s+/g, ' '), photo: e.style.backgroundImage !== '', off: e.classList.contains('off') })));
+    text: [...e.querySelectorAll('.night-preview-time, .night-preview-greeting')].map((t) => t.innerText).join(' '),
+    photo: e.style.backgroundImage !== '', off: e.classList.contains('off') })));
   let pv = await previews(page);
   check('night previews on black', JSON.stringify(pv) === JSON.stringify([
     { text: '8:00 Good evening Alex.', photo: false, off: false }, { text: '10:00 Go to sleep Alex.', photo: false, off: false }]), JSON.stringify(pv));
@@ -443,6 +446,29 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   await page.waitForTimeout(2300);
   check('defaults back: dark, go to sleep', (await night(page)).dark && (await night(page)).greeting === 'Go to sleep Alex.', JSON.stringify(await night(page)));
   check('night settings saved', JSON.stringify([(await state(page)).settings.nightMode, (await state(page)).settings.nightFrom]) === '[true,20]');
+
+  // Clicking a preview plays it on the page: settings close, a minute to the hour, the hour, then back to now
+  const settingsOpen = (p) => p.locator('#settings').evaluate((e) => e.classList.contains('open'));
+  await page.click('.night-preview >> nth=0');
+  await page.waitForTimeout(300);
+  n = await night(page);
+  check('preview at 7:59: settings closed, photo on', !(await settingsOpen(page)) && (await text(page, '.clock .time')) === '7:59' && !n.dark,
+    JSON.stringify({ ...n, time: await text(page, '.clock .time') }));
+  await page.screenshot({ path: `${SHOTS}/14-night-preview-1959.png` });
+  await page.waitForTimeout(1500);
+  n = await night(page);
+  check('preview at 8:00: black, good evening', (await text(page, '.clock .time')) === '8:00' && n.dark && n.greeting === 'Good evening Alex.',
+    JSON.stringify({ ...n, time: await text(page, '.clock .time') }));
+  await page.waitForTimeout(4000);
+  n = await night(page);
+  check('preview over: settings back at 10:30', (await settingsOpen(page)) && (await text(page, '.clock .time')) === '10:30' && n.dark && n.greeting === 'Go to sleep Alex.',
+    JSON.stringify({ ...n, time: await text(page, '.clock .time') }));
+  await page.click('.night-preview >> nth=1');
+  await page.waitForTimeout(300);
+  check('sleep preview at 9:59', (await text(page, '.clock .time')) === '9:59', await text(page, '.clock .time'));
+  await page.mouse.click(1500, 150);
+  await page.waitForTimeout(300);
+  check('click ends preview early, settings stay open', (await settingsOpen(page)) && (await text(page, '.clock .time')) === '10:30', await text(page, '.clock .time'));
   await page.keyboard.press('Escape');
   await page.close();
 
@@ -520,12 +546,11 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   const post = 'http://ask.test/r/singularity/comments/1w6f9xo/gpt_6_astra_benchmarks/';
   const saving = await ctx.newPage();
   await saving.goto(post).catch(() => {});
-  await saving.click('#later');
-  await saving.screenshot({ path: `${SHOTS}/18-ask-later.png` });
-  await saving.click('#save-link');
+  // Keys answer the question, s is Save
+  await saving.keyboard.press('s');
   await saving.waitForSelector('#clock', { timeout: 5000 }).catch(() => {});
   const saved = JSON.stringify((await state(page)).todos);
-  check('save link keeps the URL for later', saved === JSON.stringify({ 'ask.test': [{ later: true, text: 'Gpt 6 astra benchmarks', url: post }] }), saved);
+  check('save keeps the URL for later', saved === JSON.stringify({ 'ask.test': [{ later: true, text: 'Gpt 6 astra benchmarks', url: post }] }), saved);
   await saving.close();
   const asking = await ctx.newPage();
   await asking.goto('http://m.ask.test/watch?v=1&t=2').catch(() => {});
@@ -533,10 +558,7 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   check('ask page names the site', (await text(asking, '#question p')) === 'Do you really need m.ask.test?', await text(asking, '#question p'));
   await asking.screenshot({ path: `${SHOTS}/18-ask-page.png` });
   await asking.keyboard.press('y');
-  await asking.keyboard.press('Enter');
-  await asking.waitForTimeout(500);
-  check('keys do not answer', asking.url() === `${askPage}#http://m.ask.test/watch?v=1&t=2`, asking.url());
-  await asking.click('#yes');
+  check('y is Yes', (await asking.locator('#need').isVisible()) && (await asking.inputValue('#need input')) === '', await asking.inputValue('#need input'));
   await asking.fill('#need input', 'Reply to Anna');
   await asking.click('#open');
   await asking.waitForURL('http://m.ask.test/watch?v=1&t=2', { timeout: 5000 }).catch(() => {});
@@ -580,9 +602,19 @@ async function newTab(ctx, time = '2026-09-15T10:35:00', sel = '.background-item
   const refusing = await ctx.newPage();
   await refusing.goto('http://ask.test/').catch(() => {});
   check('a new tab asks again', refusing.url() === `${askPage}#http://ask.test/`, refusing.url());
-  await refusing.click('#no');
+  await refusing.keyboard.press('Enter');
   await refusing.waitForSelector('#clock', { timeout: 5000 }).catch(() => {});
-  check('no goes to the new tab page', (await refusing.locator('#clock').count()) === 1, refusing.url());
+  check('Enter is No, it goes to the new tab page', (await refusing.locator('#clock').count()) === 1, refusing.url());
+  // l is Later, the l is not typed into the note it focuses
+  await refusing.goto('http://ask.test/').catch(() => {});
+  await refusing.keyboard.press('l');
+  check('l is Later', (await refusing.locator('#for-later').isVisible()) && (await refusing.inputValue('#for-later input')) === '', await refusing.inputValue('#for-later input'));
+  await refusing.screenshot({ path: `${SHOTS}/18-ask-later.png` });
+  await refusing.fill('#for-later input', 'Watch the talk');
+  await refusing.press('#for-later input', 'Enter');
+  await refusing.waitForSelector('#clock', { timeout: 5000 }).catch(() => {});
+  const noted = JSON.stringify((await state(page)).todos);
+  check('later keeps the note', noted === JSON.stringify({ 'ask.test': [{ later: true, text: 'Watch the talk' }] }), noted);
   // Like blocked.html, a clicked link only reaches ask.html because the page is web accessible
   await refusing.route('http://links.test/', (r) => r.fulfill({ contentType: 'text/html', body: '<a href="http://ask.test/from-link">ask</a>' }));
   await refusing.goto('http://links.test/');

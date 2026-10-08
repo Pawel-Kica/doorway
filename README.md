@@ -22,7 +22,7 @@ If another new tab extension is installed, turn it off, because only one extensi
 
 Click the sliders icon in the bottom-left corner.
 
-**General:** show or hide the clock and greeting, 24-hour clock. Hover the greeting and click "..." to add your name.
+**General:** show or hide the clock and greeting, 24-hour clock, your name in the greeting. Double-click the name on the page to edit it there too.
 
 <img src="docs/screenshots/2-general.png" alt="General settings" width="380">
 
@@ -34,7 +34,7 @@ Click the sliders icon in the bottom-left corner.
 
 <img src="docs/screenshots/4-photo-settings.png" alt="Photo settings" width="380">
 
-**Night mode:** from 20:00 the photo goes away and it's just the clock on black. From 22:00 the greeting says "Go to sleep". Turn either off or change the hours here.
+**Night mode:** from 20:00 the photo goes away and it's just the clock on black. From 22:00 the greeting says "Go to sleep". Turn either off or change the hours here. Click a preview to watch the switch on the page.
 
 <img src="docs/screenshots/5-night-mode.png" alt="Night mode" width="380">
 
@@ -44,7 +44,7 @@ Click the location text at the bottom left to favorite the photo or skip to the 
 
 - Night mode ends at 4:00 by default, the same hour "Good morning" starts.
 - Blocked websites (Settings > Distractions): type a site and it opens a black "blocked" page instead, subdomains included. `bbc.com` covers the whole site, `bbc.com/news` only that part. This is why the extension asks for access to all sites, it only uses it to redirect the ones on your lists.
-- Think twice (Settings > Distractions): a site on this list first asks "Do you really need it?". Yes asks what you need there, then opens it in that tab until you close the tab, with your answer in a todo list in the top right corner (+ adds more, a click on "Todos" folds it). Once everything is checked, "I'm done!" takes you back to the new tab. Later saves a note, or the link you came from, to that site's list for next time. No takes you back to the new tab.
+- Think twice (Settings > Distractions): a site on this list first asks "Do you really need it?". Yes asks what you need there, then opens it in that tab until you close the tab, with your answer in a todo list in the top right corner (+ adds more, a click on "Todos" folds it). Once everything is checked, "I'm done!" takes you back to the new tab. Save keeps the link you came from on that site's list for next time, Later keeps a note there. No takes you back to the new tab. Keys work too: y Yes, s Save, l Later, n or Enter No.
 - Feeds: Nature photos, My photos and Favorites, turn on any mix and photos come from all of them. If they are all empty you get Nature photos.
 - Change photo: every new tab, every hour, every 6-12 hours (default, random) or every day (at 4:00). No repeats until the enabled feeds run out.
 - Photo fit: Fill screen crops the photo, Fit to screen shows all of it over a blurred copy. Auto (default) fits when filling would crop more than 35%.
